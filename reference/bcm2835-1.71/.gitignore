@@ -1,0 +1,12 @@
+.deps/
+config.h
+stamp-h1
+Makefile
+
+libbcm2835.a
+
+test
+test.*
+
+*.log
+*.status
