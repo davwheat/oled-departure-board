@@ -37,6 +37,11 @@ sudo ./oled
 
 The test app should cycle through various monochrome bitmaps, before displaying the time and an cycling advert for "www.buydisplay.com".
 
+<details>
+<summary>Pictures of the test script running on the display.</summary>
+
 ![Display showing an image of various pandas, alongside text "www.buydisplay.com"](./docs/img/oled_test/pandas.jpg)
 
 ![Display the current time, alongside text "www.buydisplay.com"](./docs/img/oled_test/time.jpg)
+
+</details>
