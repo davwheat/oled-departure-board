@@ -22,3 +22,21 @@ sudo make install
 ```
 
 These commands will build, test, and install the BCM2835 C library onto your Raspberry Pi.
+
+### Test the OLED
+
+If you're using the same OLED display as me, the seller provides a test program which you can use.
+
+You'll need the BCM2835 library from the last step already installed.
+
+```
+cd reference/SPI_Interface
+make
+sudo ./oled
+```
+
+The test app should cycle through various monochrome bitmaps, before displaying the time and an cycling advert for "www.buydisplay.com".
+
+![Display showing an image of various pandas, alongside text "www.buydisplay.com"](./docs/img/oled_test/pandas.jpg)
+
+![Display the current time, alongside text "www.buydisplay.com"](./docs/img/oled_test/time.jpg)
