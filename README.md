@@ -78,6 +78,7 @@ sudo usermod -a -G spi,gpio,i2c $(whoami)
 This may be different depending on your display, but this works correctly with mine.
 
 > **Note**
+>
 > RPi pin numbers in the table below are the GPIO pin numbers and **not** the physical pin numbers on the header.
 
 | Display pin | RPi GPIO pin |
