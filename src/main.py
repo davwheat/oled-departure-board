@@ -1,8 +1,17 @@
+import os
+
+# Reset working directory to file's location
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
+### Main code ###
+
+from time import time, sleep
+
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.oled.device import ssd1322
-
-from time import time, sleep
 
 from UiElements.Clock import Clock
 
