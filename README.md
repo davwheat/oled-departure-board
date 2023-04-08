@@ -8,6 +8,7 @@
   - [Prerequisites](#prerequisites)
   - [Connecting the display](#connecting-the-display)
   - [Launch time!](#launch-time)
+- [License](#license)
 
 
 ## Equipment
@@ -108,3 +109,14 @@ Run the script!
 python src/main.py
 ```
 
+
+## License
+
+This repository is licensed under the MIT license, but I do appreciate some form of attribution if you reuse this elsewhere.
+
+The CustomPixelFont in `src/assets` was created by me using some fantastic free (for now?) software called [PixelForge](https://www.pixel-forge.com/) ([download permalink](https://archive.org/details/pixel-forge-0.9b-windows-20221104)) developed by [Sergi Lázaro](https://www.sergilazaro.com/).
+
+**Exceptions:**
+
+- [Pixeloid Sans](https://www.fontspace.com/pixeloid-font-f69232) font files in `src/assets` is licensed under the [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=ofl)
+- [Pixel Arial 11](https://www.dafont.com/pixel-arial-11.font) in `src/assets` is labelled as "100% free" but the author will normally retain copyright ownership
