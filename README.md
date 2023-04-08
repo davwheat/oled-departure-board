@@ -116,7 +116,7 @@ python src/main.py
 
 This repository is licensed under the MIT license, but I do appreciate some form of attribution if you reuse this elsewhere.
 
-The CustomPixelFont in `src/assets` was created by me using some fantastic free (for now?) software called [PixelForge](https://www.pixel-forge.com/) ([download permalink](https://archive.org/details/pixel-forge-0.9b-windows-20221104)) developed by [Sergi Lázaro](https://www.sergilazaro.com/).
+The CustomPixelFont and CustomPixelFontSmall in `src/assets` were created by me using free (for now?) software called [PixelForge](https://www.pixel-forge.com/) ([download permalink](https://archive.org/details/pixel-forge-0.9b-windows-20221104)) developed by [Sergi Lázaro](https://www.sergilazaro.com/).
 
 **Exceptions:**
 
