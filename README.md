@@ -1,5 +1,7 @@
 # OLED departure board <!-- omit in toc -->
 
+## Contents <!-- omit in toc -->
+
 - [Equipment](#equipment)
 - [Testing the display](#testing-the-display)
   - [Install BCM2835 C library](#install-bcm2835-c-library)
