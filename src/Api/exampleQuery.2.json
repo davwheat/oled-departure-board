@@ -1,0 +1,221 @@
+{
+  "trainServices": [
+    {
+      "previousCallingPoints": null,
+      "subsequentCallingPoints": [
+        {
+          "callingPoint": [
+            {
+              "locationName": "Guildford",
+              "crs": "GLD",
+              "st": "00:04",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "North Camp",
+              "crs": "NCM",
+              "st": "00:19",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "Blackwater",
+              "crs": "BAW",
+              "st": "00:26",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "Wokingham",
+              "crs": "WKM",
+              "st": "00:34",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "Reading",
+              "crs": "RDG",
+              "st": "00:44",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            }
+          ],
+          "serviceType": 0,
+          "serviceChangeRequired": false,
+          "assocIsCancelled": false
+        }
+      ],
+      "formation": null,
+      "origin": [
+        {
+          "locationName": "Gatwick Airport",
+          "crs": "GTW",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "Reading",
+          "crs": "RDG",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "rsid": "GW554800",
+      "serviceIdPercentEncoded": "2434319DEPDENE_",
+      "serviceIdGuid": "32343334-0033-3139-4445-5044454e455f",
+      "serviceIdUrlSafe": "MjQzNDMxOURFUERFTkVf",
+      "sta": null,
+      "eta": null,
+      "std": "23:47",
+      "etd": "On time",
+      "platform": "2",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": 0,
+      "length": 0,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": null,
+      "serviceID": "2434319DEPDENE_",
+      "adhocAlerts": null
+    },
+    {
+      "previousCallingPoints": null,
+      "subsequentCallingPoints": [
+        {
+          "callingPoint": [
+            {
+              "locationName": "Reigate",
+              "crs": "REI",
+              "st": "00:47",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "Redhill",
+              "crs": "RDH",
+              "st": "00:53",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            },
+            {
+              "locationName": "Gatwick Airport",
+              "crs": "GTW",
+              "st": "01:04",
+              "et": "On time",
+              "at": null,
+              "isCancelled": false,
+              "length": 0,
+              "detachFront": false,
+              "formation": null,
+              "adhocAlerts": null
+            }
+          ],
+          "serviceType": 0,
+          "serviceChangeRequired": false,
+          "assocIsCancelled": false
+        }
+      ],
+      "formation": null,
+      "origin": [
+        {
+          "locationName": "Reading",
+          "crs": "RDG",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "destination": [
+        {
+          "locationName": "Gatwick Airport",
+          "crs": "GTW",
+          "via": null,
+          "futureChangeTo": null,
+          "assocIsCancelled": false
+        }
+      ],
+      "currentOrigins": null,
+      "currentDestinations": null,
+      "rsid": "GW564900",
+      "serviceIdPercentEncoded": "2438119DEPDENE_",
+      "serviceIdGuid": "32343338-0031-3139-4445-5044454e455f",
+      "serviceIdUrlSafe": "MjQzODExOURFUERFTkVf",
+      "sta": null,
+      "eta": null,
+      "std": "00:40",
+      "etd": "On time",
+      "platform": "1",
+      "operator": "Great Western Railway",
+      "operatorCode": "GW",
+      "isCircularRoute": false,
+      "isCancelled": false,
+      "filterLocationCancelled": false,
+      "serviceType": 0,
+      "length": 0,
+      "detachFront": false,
+      "isReverseFormation": false,
+      "cancelReason": null,
+      "delayReason": null,
+      "serviceID": "2438119DEPDENE_",
+      "adhocAlerts": null
+    }
+  ],
+  "busServices": null,
+  "ferryServices": null,
+  "generatedAt": "2023-04-08T22:33:24.8355712+00:00",
+  "locationName": "Dorking Deepdene",
+  "crs": "DPD",
+  "filterLocationName": null,
+  "filtercrs": null,
+  "filterType": 0,
+  "nrccMessages": null,
+  "platformAvailable": true,
+  "areServicesAvailable": true
+}
