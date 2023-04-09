@@ -1,14 +1,15 @@
 from Models.Train import Train
-
-from typing import Union
+from Utils.Log import debug, error
 
 import requests
 
-__DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.json"
-# __DEBUG_FILE: Union[None, str] = None
+from typing import Union
+
+# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.3.json"
+__DEBUG_FILE: Union[None, str] = None
 
 
-def __generateUrl(stationCrs: str, servicesCount: int = 3) -> str:
+def __generateUrl(stationCrs: str, servicesCount: int = 8) -> str:
     """Generates a URL to a Huxley 2 compatible API endpoint."""
     return f"https://national-rail-api.davwheat.dev/departures/{stationCrs}/{servicesCount}?expand=true"
 
@@ -28,11 +29,11 @@ def fetchServicesFromStation(stationCrs: str) -> list[Train]:
         try:
             resp = requests.get(url)
         except requests.exceptions.RequestException as e:
-            print(f"Network error: failed to fetch train data. ({e})")
+            error(f"Network error: failed to fetch train data. ({e})")
             return []
 
         if not resp.ok:
-            print(
+            error(
                 f"API Error: failed to fetch train data. (Status code: {resp.status_code})"
             )
             return []
@@ -43,6 +44,18 @@ def fetchServicesFromStation(stationCrs: str) -> list[Train]:
         return []
 
     # Parse JSON into a list of trains
-    trains = [Train(x) for x in data["trainServices"]]
+    trains: list[Train] = []
+
+    for service in data["trainServices"]:
+        train = Train(service)
+
+        # Get time diff in minutes
+        time_diff = train.estimatedDepartingInMinutes()
+
+        # Ignore trains that have already departed
+        if time_diff is not None and time_diff < -1:
+            continue
+
+        trains.append(train)
 
     return trains
