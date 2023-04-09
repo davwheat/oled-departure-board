@@ -5,13 +5,13 @@ line_gap: 1
 
 space_width: 4
 
-creator_name: Unknown
-font_family_name: Test
-font_sub_family_name: Regular
-version: Version 1.0
-font_url: 
-license: 
-license_url: 
+creator_name: David Wheatley
+font_family_name: Custom Pixel Font
+font_sub_family_name: Small
+version: 1
+font_url: https://github.com/davwheat/oled-departure-board/tree/main/src/assets
+license: MIT
+license_url: https://github.com/davwheat/oled-departure-board/blob/main/LICENSE
 
 last_exported_path: C:\Users\dwhea\Downloads\Test.ttf
 
