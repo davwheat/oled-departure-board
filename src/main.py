@@ -2,6 +2,8 @@ import os
 from threading import Thread
 from timed_count import timed_count
 
+from AppState import AppState
+
 # Reset working directory to file's location
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -24,17 +26,16 @@ from Api.RequestTrains import fetchServicesFromStation
 from typing import Union
 
 
-fps: int = 60
-frameperiod: float = 1.0 / fps
-now: float = time()
-nextframe: float = now + frameperiod
-device: Union[ssd1322, None] = None
+_frameperiod: float = 1.0 / AppState.fps
+_now: float = time()
+_nextframe: float = _now + _frameperiod
+_device: Union[ssd1322, None] = None
 
-data_refresh_rate = 120
+_data_refresh_rate = 60
 
 
 def periodic():
-    for _ in timed_count(60):
+    for _ in timed_count(_data_refresh_rate):
         update_data()
 
 
@@ -49,36 +50,36 @@ def update_data():
 
 
 def main():
-    global nextframe, frameperiod, now, device
+    global _nextframe, _frameperiod, _now, _device
 
     thread = Thread(target=periodic)
     thread.start()
 
     serial = spi(device=0, port=0)
 
-    device = ssd1322(serial)
+    _device = ssd1322(serial)
 
     while True:
-        now = time()
+        _now = time()
 
-        while now < nextframe:
-            sleep(nextframe - now)
-            now = time()
+        while _now < _nextframe:
+            sleep(_nextframe - _now)
+            _now = time()
 
-        nextframe += frameperiod
+        _nextframe += _frameperiod
 
         draw_frame()
 
 
 def draw_frame():
-    global device
+    global _device
 
-    if device is None:
+    if _device is None:
         print("Device not initialized")
         exit(1)
 
-    with canvas(device) as c:
-        clock = Clock(c, device, (device.width // 2, device.height))
+    with canvas(_device) as c:
+        clock = Clock(c, _device, (_device.width // 2, _device.height))
         clock.draw()
 
         if AppState.trains is None:
@@ -87,7 +88,7 @@ def draw_frame():
         if len(AppState.trains) == 0:
             return
 
-        primary_service = PrimaryService(c, device, (0, -1), AppState.trains[0])
+        primary_service = PrimaryService(c, _device, (0, -1), AppState.trains[0])
         primary_service.draw()
 
 

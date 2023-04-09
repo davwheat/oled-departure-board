@@ -8,3 +8,5 @@ from Models.Train import Train
 class AppState:
     # Trains to display
     trains: Union[list[Train], None] = None
+
+    fps: int = 50
