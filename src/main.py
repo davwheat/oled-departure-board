@@ -22,6 +22,7 @@ from UiElements.PrimaryService import PrimaryService
 
 from AppState import AppState
 from Api.RequestTrains import fetchServicesFromStation
+from Utils.Log import debug, error
 
 from typing import Union
 
@@ -40,13 +41,13 @@ def periodic():
 
 
 def update_data():
-    print("Updating data...")
+    debug("Updating data...")
 
-    services = fetchServicesFromStation("ECR")
+    services = fetchServicesFromStation("BUG")
 
     AppState.trains = services
 
-    print(f"Updated data. {len(services)} services found.")
+    debug(f"Updated data. {len(services)} services found.")
 
 
 def main():
@@ -75,7 +76,7 @@ def draw_frame():
     global _device
 
     if _device is None:
-        print("Device not initialized")
+        error("Device not initialized")
         exit(1)
 
     with canvas(_device) as c:
