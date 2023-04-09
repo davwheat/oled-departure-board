@@ -171,7 +171,7 @@ glyphs:
 		advance: 6
 		auto_update_advance: true
 		auto_advance_amount: 1
-		pixels: 0 4, 0 5, 1 6, 2 0, 2 2, 2 6, 3 3, 3 6, 4 4, 4 5, 
+		pixels: 0 9, 1 10, 2 0, 2 3, 2 4, 2 10, 3 5, 3 10, 4 6, 4 7, 4 8, 4 9, 
 	64:
 		advance: 6
 		auto_update_advance: true
