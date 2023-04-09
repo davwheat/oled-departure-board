@@ -16,6 +16,7 @@ from luma.core.render import canvas
 from luma.oled.device import ssd1322
 
 from UiElements.Clock import Clock
+from UiElements.PrimaryService import PrimaryService
 
 from AppState import AppState
 from Api.RequestTrains import fetchServicesFromStation
@@ -86,6 +87,8 @@ def draw_frame():
         if len(AppState.trains) == 0:
             return
 
+        primary_service = PrimaryService(c, device, (0, -1), AppState.trains[0])
+        primary_service.draw()
 
 
 if __name__ == "__main__":
