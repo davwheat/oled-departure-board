@@ -14,3 +14,9 @@ class Location:
             return self.locationName
 
         return f"{self.locationName} {self.via}"
+
+    def to_snippets(self) -> list[str]:
+        if self.via is None:
+            return [self.locationName]
+
+        return [f"{self.locationName} via", self.via]
