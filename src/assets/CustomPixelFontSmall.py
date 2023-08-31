@@ -1,7 +1,8 @@
 from PIL import ImageFont
 
-TestFont_Size = 13
-TestFont = ImageFont.truetype(
+SmallFont_Size = 13
+SmallFont = ImageFont.truetype(
     "./assets/CustomPixelFontSmall.ttf",
-    TestFont_Size,
+    SmallFont_Size,
+    layout_engine=ImageFont.Layout.BASIC,
 )
