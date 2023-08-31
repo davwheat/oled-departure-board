@@ -85,7 +85,7 @@ class PrimaryService(Drawable):
 
     def __get_destination_snippets(self) -> list[str]:
         # def text_width(text: str) -> int:
-        #     return self._canvas.textsize(text, font=SmallFont)[0]
+        #     return self._canvas.textlength(text, font=SmallFont)
 
         # def text_too_wide(text: str) -> bool:
         #     occupied_width = (
@@ -162,11 +162,11 @@ class PrimaryService(Drawable):
 
         return estDepTimeText
 
-    def __get_est_time_width(self, c: ImageDraw.ImageDraw) -> int:
+    def __get_est_time_width(self, c: ImageDraw.ImageDraw) -> float:
         myFont = SmallFont
 
         # width of est dep time
-        estDepTextWidth, _ = c.textsize(
+        estDepTextWidth = c.textlength(
             self.__get_est_time_text(),
             font=myFont,
         )
@@ -221,8 +221,8 @@ class PrimaryService(Drawable):
         text = service.callingPointsText()
         desc_text = "Calling at: "
 
-        stops_width, _ = c.textsize(text, font=SmallFont)
-        desc_width, _ = c.textsize(desc_text, font=SmallFont)
+        stops_width = c.textlength(text, font=SmallFont)
+        desc_width = c.textlength(desc_text, font=SmallFont)
 
         # Reset scroller if service has changed
         if _calling_at_frame_guid != service.guid:

@@ -15,10 +15,10 @@ class NoServices(Drawable):
             "on 03457 48 49 50",
         ]
 
-        sizes = [c.textsize(line, font=SmallFont) for line in lines]
+        sizes = [c.textlength(text=line, font=SmallFont) for line in lines]
 
         for i, line in enumerate(lines):
-            x = (dev.width - sizes[i][0]) // 2
+            x = (dev.width - sizes[i]) // 2
 
             c.text(
                 (x + pos[0], ((SmallFont_Size + 3) * i) + pos[1]),
