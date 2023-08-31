@@ -40,7 +40,8 @@ class Train:
         self.guid: str = json["serviceIdGuid"]
 
         self.callingPoints = [
-            CallingPoint(x) for x in json["subsequentCallingPoints"][0]["callingPoint"]
+            CallingPoint(x, self.isCancelled)
+            for x in json["subsequentCallingPoints"][0]["callingPoint"]
         ]
 
     def is_arriving(self) -> bool:
