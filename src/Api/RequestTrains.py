@@ -5,7 +5,7 @@ import requests
 
 from typing import Union
 
-# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.3.json"
+# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.1.json"
 __DEBUG_FILE: Union[None, str] = None
 
 

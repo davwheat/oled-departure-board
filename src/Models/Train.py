@@ -1,9 +1,12 @@
 from Models.Location import Location
+from Models.CallingPoint import CallingPoint
+
+from Utils.String import pluralise
 
 from typing import Union
 
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 arrived_trains: dict[str, float] = {}
@@ -35,6 +38,10 @@ class Train:
         self.cancelReason: Union[str, None] = json["cancelReason"]
 
         self.guid: str = json["serviceIdGuid"]
+
+        self.callingPoints = [
+            CallingPoint(x) for x in json["subsequentCallingPoints"][0]["callingPoint"]
+        ]
 
     def is_arriving(self) -> bool:
         """Returns whether the train is arriving at the station."""
@@ -93,13 +100,23 @@ class Train:
         if now.hour < 12:
             # If before midday
             if est_time.hour < 9:
-                est_time = est_time.replace(day=now.day - 1)
+                est_time -= timedelta(days=1)
         else:
             # If after midday
             if est_time.hour < 9:
-                est_time = est_time.replace(day=now.day + 1)
+                est_time += timedelta(days=1)
 
         # Get time diff in minutes
         time_diff = (est_time - now).total_seconds() / 60
 
         return time_diff
+
+    def callingPointsText(self) -> str:
+        """Returns the calling points as a string."""
+
+        if len(self.callingPoints) == 1:
+            return str(self.callingPoints[0]) + " only."
+
+        return (
+            pluralise([str(callingPoint) for callingPoint in self.callingPoints]) + "."
+        )

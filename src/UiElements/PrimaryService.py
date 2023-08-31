@@ -1,9 +1,12 @@
 from Drawable import Drawable
+from PIL import ImageDraw
 
-from assets.CustomPixelFontSmall import TestFont
+from assets.CustomPixelFontSmall import SmallFont, SmallFont_Size
 
 from Models.Train import Train
 from AppState import AppState
+
+from typing import Union
 
 
 _cancelled_frame_counter = 0
@@ -13,7 +16,10 @@ _cancelled_frame_counter_iterated = False
 
 _destination_frame_counter = 0
 _destination_frame_counter_max = 0
-_destination_frame_counter_iterated = False
+
+_calling_at_frame_guid: Union[None, str] = None
+_calling_at_frame_counter = 0
+_calling_at_frame_counter_max = 0
 
 
 class PrimaryService(Drawable):
@@ -26,9 +32,10 @@ class PrimaryService(Drawable):
 
     est_time_spacing = 4
 
-    def __init__(self, canvas, device, pos, service: Train):
-        super().__init__(canvas, device, pos)
+    def __init__(self, device, pos, service: Train):
+        super().__init__(device, pos)
         self._service: Train = service
+        self.service_guid = service.guid
 
     def __del__(self):
         global _cancelled_frame_counter_iterated
@@ -56,10 +63,8 @@ class PrimaryService(Drawable):
                 (1 - ((_cancelled_frame_counter - half_point) / half_point)) * 255
             )
 
-    def __draw_ordinal(self, root_pos: tuple[int, int]):
-        c = self._canvas
-
-        myFont = TestFont
+    def __draw_ordinal(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
+        myFont = SmallFont
 
         c.text(
             (root_pos[0], root_pos[1]),
@@ -68,10 +73,8 @@ class PrimaryService(Drawable):
             fill="white",
         )
 
-    def __draw_scheduled_time(self, root_pos: tuple[int, int]):
-        c = self._canvas
-
-        myFont = TestFont
+    def __draw_scheduled_time(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
+        myFont = SmallFont
 
         c.text(
             (root_pos[0], root_pos[1]),
@@ -82,7 +85,7 @@ class PrimaryService(Drawable):
 
     def __get_destination_snippets(self) -> list[str]:
         # def text_width(text: str) -> int:
-        #     return self._canvas.textsize(text, font=TestFont)[0]
+        #     return self._canvas.textsize(text, font=SmallFont)[0]
 
         # def text_too_wide(text: str) -> bool:
         #     occupied_width = (
@@ -117,12 +120,10 @@ class PrimaryService(Drawable):
 
         return flattened_snippets
 
-    def __draw_destination(self, root_pos: tuple[int, int]):
+    def __draw_destination(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
         global _destination_frame_counter_max, _destination_frame_counter
 
-        c = self._canvas
-
-        myFont = TestFont
+        myFont = SmallFont
 
         snippets = self.__get_destination_snippets()
         snippet_count = len(snippets)
@@ -161,9 +162,8 @@ class PrimaryService(Drawable):
 
         return estDepTimeText
 
-    def __get_est_time_width(self) -> int:
-        c = self._canvas
-        myFont = TestFont
+    def __get_est_time_width(self, c: ImageDraw.ImageDraw) -> int:
+        myFont = SmallFont
 
         # width of est dep time
         estDepTextWidth, _ = c.textsize(
@@ -173,16 +173,15 @@ class PrimaryService(Drawable):
 
         return estDepTextWidth
 
-    def __draw_est_time(self):
+    def __draw_est_time(self, c: ImageDraw.ImageDraw):
         self.__increment_cancelled_frame_counter()
 
-        c = self._canvas
         pos = self._pos
 
-        myFont = TestFont
+        myFont = SmallFont
 
         estDepTimeText: str = self.__get_est_time_text()
-        estDepTextX = self._device.width - self.__get_est_time_width()
+        estDepTextX = self._device.width - self.__get_est_time_width(c)
 
         # Backup in case of overflow from destination text
         c.rectangle(
@@ -212,10 +211,64 @@ class PrimaryService(Drawable):
             fill=color,
         )
 
-    def draw(self):
-        self.__draw_ordinal((self._pos[0], self._pos[1]))
-        self.__draw_scheduled_time((self._pos[0] + self.ordinal_width, self._pos[1]))
-        self.__draw_destination(
-            (self._pos[0] + self.ordinal_width + self.time_width, self._pos[1])
+    def __draw_details(self, c: ImageDraw.ImageDraw):
+        global _calling_at_frame_guid, _calling_at_frame_counter
+
+        pos = self._pos
+        service = self._service
+        device = self._device
+
+        text = service.callingPointsText()
+        desc_text = "Calling at: "
+
+        stops_width, _ = c.textsize(text, font=SmallFont)
+        desc_width, _ = c.textsize(desc_text, font=SmallFont)
+
+        # Reset scroller if service has changed
+        if _calling_at_frame_guid != service.guid:
+            _calling_at_frame_guid = service.guid
+            _calling_at_frame_counter = 0
+        else:
+            _calling_at_frame_counter += 1
+
+        # Reset position if fully scrolled with 2s delay
+        if (
+            _calling_at_frame_counter
+            > stops_width + (device.width - desc_width) + AppState.fps * 2
+        ):
+            _calling_at_frame_counter = 0
+
+        scroller_x_pos = device.width - (_calling_at_frame_counter)
+
+        c.text(
+            (scroller_x_pos, pos[1] + SmallFont_Size + 3),
+            text,
+            font=SmallFont,
+            fill="white",
         )
-        self.__draw_est_time()
+
+        c.rectangle(
+            (
+                pos[0],
+                pos[1] + SmallFont_Size + 3,
+                pos[0] + desc_width,
+                pos[1] + (SmallFont_Size + 3) * 2,
+            ),
+            fill="black",
+        )
+
+        c.text(
+            (pos[0], pos[1] + SmallFont_Size + 3),
+            desc_text,
+            font=SmallFont,
+            fill="white",
+        )
+
+    def draw(self, c: ImageDraw.ImageDraw):
+        self.__draw_ordinal(c, (self._pos[0], self._pos[1]))
+        self.__draw_scheduled_time(c, (self._pos[0] + self.ordinal_width, self._pos[1]))
+        self.__draw_destination(
+            c, (self._pos[0] + self.ordinal_width + self.time_width, self._pos[1])
+        )
+        self.__draw_est_time(c)
+        self.__draw_details(c)

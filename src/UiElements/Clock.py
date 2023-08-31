@@ -1,14 +1,15 @@
 from Drawable import Drawable
+from PIL import ImageDraw
 
 from zoneinfo import ZoneInfo
 from datetime import datetime
 
-from assets.CustomPixelFont import CustomPixelFont
+from assets.CustomPixelFontClock import ClockFont
+from Utils.CachedText import cachedBitmapText
 
 
 class Clock(Drawable):
-    def draw(self):
-        c = self._canvas
+    def draw(self, c: ImageDraw.ImageDraw):
         pos = self._pos
 
         # Get time HH:mm:ss
@@ -18,61 +19,38 @@ class Clock(Drawable):
         min = time.strftime("%M")
         secs = time.strftime("%S")
 
-        widthPerChar = 12
+        widthPerChar = 10
         colonWidth = 5
 
-        myFont = CustomPixelFont
-        _, height = c.textsize(hour, font=myFont)
+        _, height, h1 = cachedBitmapText(hour[0], ClockFont)
+        _, height, h2 = cachedBitmapText(hour[1], ClockFont)
+        _, height, m1 = cachedBitmapText(min[0], ClockFont)
+        _, height, m2 = cachedBitmapText(min[1], ClockFont)
+        _, height, s1 = cachedBitmapText(secs[0], ClockFont)
+        _, height, s2 = cachedBitmapText(secs[1], ClockFont)
+        _, height, colon = cachedBitmapText(":", ClockFont)
 
         pos_x_start: int = pos[0] - ((6 * widthPerChar + 2 * colonWidth) // 2)
         pos_y: int = pos[1] - height
 
-        # Hour char 1
-        c.text((pos_x_start, pos_y), hour[0], font=myFont, fill="white")
-        # Hour char 2
-        c.text((pos_x_start + widthPerChar, pos_y), hour[1], font=myFont, fill="white")
+        # Hour chars
+        c.bitmap((pos_x_start, pos_y), h1, fill="white")
+        c.bitmap((pos_x_start + widthPerChar, pos_y), h2, fill="white")
 
-        # Min char 1
-        c.text(
-            (pos_x_start + 2 * widthPerChar + colonWidth, pos_y),
-            min[0],
-            font=myFont,
-            fill="white",
+        # Min chars
+        c.bitmap((pos_x_start + 2 * widthPerChar + colonWidth, pos_y), m1, fill="white")
+        c.bitmap((pos_x_start + 3 * widthPerChar + colonWidth, pos_y), m2, fill="white")
+
+        # Sec chars
+        c.bitmap(
+            (pos_x_start + 4 * widthPerChar + 2 * colonWidth, pos_y), s1, fill="white"
         )
-        # Min char 2
-        c.text(
-            (pos_x_start + 3 * widthPerChar + colonWidth, pos_y),
-            min[1],
-            font=myFont,
-            fill="white",
+        c.bitmap(
+            (pos_x_start + 5 * widthPerChar + 2 * colonWidth, pos_y), s2, fill="white"
         )
 
-        # Sec char 1
-        c.text(
-            (pos_x_start + 4 * widthPerChar + 2 * colonWidth, pos_y),
-            secs[0],
-            font=myFont,
-            fill="white",
-        )
-        # Sec char 2
-        c.text(
-            (pos_x_start + 5 * widthPerChar + 2 * colonWidth, pos_y),
-            secs[1],
-            font=myFont,
-            fill="white",
-        )
-
-        # Colon 1
-        c.text(
-            (pos_x_start + widthPerChar * 2 + 1, pos_y),
-            "¦",
-            font=myFont,
-            fill="white",
-        )
-        # Colon 2
-        c.text(
-            (pos_x_start + widthPerChar * 4 + colonWidth + 1, pos_y),
-            "¦",
-            font=myFont,
-            fill="white",
+        # Colons
+        c.bitmap((pos_x_start + widthPerChar * 2, pos_y), colon, fill="white")
+        c.bitmap(
+            (pos_x_start + widthPerChar * 4 + colonWidth, pos_y), colon, fill="white"
         )
