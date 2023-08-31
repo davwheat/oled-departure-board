@@ -19,6 +19,7 @@ from luma.oled.device import ssd1322
 
 from UiElements.Clock import Clock
 from UiElements.PrimaryService import PrimaryService
+from UiElements.NoServices import NoServices
 
 from AppState import AppState
 from Api.RequestTrains import fetchServicesFromStation
@@ -43,7 +44,7 @@ def periodic():
 def update_data():
     debug("Updating data...")
 
-    services = fetchServicesFromStation("BUG")
+    services = fetchServicesFromStation("WVF")
 
     AppState.trains = services
 
@@ -79,18 +80,24 @@ def draw_frame():
         error("Device not initialized")
         exit(1)
 
+    clock = Clock(_device, (_device.width // 2, _device.height))
+    primary_service: Union[None, PrimaryService] = None
+
     with canvas(_device) as c:
-        clock = Clock(c, _device, (_device.width // 2, _device.height))
-        clock.draw()
+        clock.draw(c)
 
-        if AppState.trains is None:
+        if AppState.trains is None or len(AppState.trains) == 0:
+            no_services = NoServices(_device, (0, 0))
+            no_services.draw(c)
             return
 
-        if len(AppState.trains) == 0:
-            return
+        if (
+            primary_service is None
+            or primary_service.service_guid != AppState.trains[0].guid
+        ):
+            primary_service = PrimaryService(_device, (0, -1), AppState.trains[0])
 
-        primary_service = PrimaryService(c, _device, (0, -1), AppState.trains[0])
-        primary_service.draw()
+        primary_service.draw(c)
 
 
 if __name__ == "__main__":
