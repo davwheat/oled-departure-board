@@ -39,10 +39,15 @@ class Train:
 
         self.guid: str = json["serviceIdGuid"]
 
-        self.callingPoints = [
-            CallingPoint(x, self.isCancelled)
-            for x in json["subsequentCallingPoints"][0]["callingPoint"]
-        ]
+        self.callingPoints = list(
+            filter(
+                lambda x: not x.isCancelled,
+                [
+                    CallingPoint(x, self.isCancelled)
+                    for x in json["subsequentCallingPoints"][0]["callingPoint"]
+                ],
+            )
+        )
 
     def is_arriving(self) -> bool:
         """Returns whether the train is arriving at the station."""
