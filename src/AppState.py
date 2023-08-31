@@ -9,4 +9,4 @@ class AppState:
     # Trains to display
     trains: Union[list[Train], None] = None
 
-    fps: int = 50
+    fps: int = 60
