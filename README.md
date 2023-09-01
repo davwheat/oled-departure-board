@@ -12,7 +12,6 @@
   - [Launch time!](#launch-time)
 - [License](#license)
 
-
 ## Equipment
 
 - Raspberry Pi 4
@@ -118,7 +117,3 @@ This repository is licensed under the MIT license, but I do appreciate some form
 
 The CustomPixelFont and CustomPixelFontSmall in `src/assets` were created by me using free (for now?) software called [PixelForge](https://www.pixel-forge.com/) ([download permalink](https://archive.org/details/pixel-forge-0.9b-windows-20221104)) developed by [Sergi Lázaro](https://www.sergilazaro.com/).
 
-**Exceptions:**
-
-- [Pixeloid Sans](https://www.fontspace.com/pixeloid-font-f69232) font files in `src/assets` is licensed under the [SIL Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=ofl)
-- [Pixel Arial 11](https://www.dafont.com/pixel-arial-11.font) in `src/assets` is labelled as "100% free" but the author will normally retain copyright ownership
