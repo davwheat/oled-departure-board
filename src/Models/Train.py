@@ -105,8 +105,8 @@ class Train:
         # Handle midnight and day rollover
         if now.hour < 12:
             # If before midday
-            if est_time.hour < 9:
-                est_time -= timedelta(days=1)
+            if est_time.hour > 9:
+                est_time += timedelta(days=-1)
         else:
             # If after midday
             if est_time.hour < 9:
