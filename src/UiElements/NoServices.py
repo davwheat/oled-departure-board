@@ -3,6 +3,8 @@ from PIL import ImageDraw
 
 from assets.CustomPixelFontSmall import SmallFont, SmallFont_Size
 
+from Utils.CachedText import cachedBitmapText
+
 
 class NoServices(Drawable):
     def draw(self, c: ImageDraw.ImageDraw):
@@ -15,14 +17,13 @@ class NoServices(Drawable):
             "on 03457 48 49 50",
         ]
 
-        sizes = [c.textlength(text=line, font=SmallFont) for line in lines]
+        parsed_lines = [cachedBitmapText(line, SmallFont) for line in lines]
 
-        for i, line in enumerate(lines):
-            x = (dev.width - sizes[i]) // 2
+        for i, line in enumerate(parsed_lines):
+            x = (dev.width - line[0]) // 2
 
-            c.text(
+            c.bitmap(
                 (x + pos[0], ((SmallFont_Size + 3) * i) + pos[1]),
-                line,
-                font=SmallFont,
+                line[2],
                 fill="white",
             )
