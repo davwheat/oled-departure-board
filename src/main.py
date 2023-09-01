@@ -19,6 +19,7 @@ from luma.oled.device import ssd1322
 
 from UiElements.Clock import Clock
 from UiElements.PrimaryService import PrimaryService
+from UiElements.SecondaryService import SecondaryService
 from UiElements.NoServices import NoServices
 
 from AppState import AppState
@@ -82,6 +83,7 @@ def draw_frame():
 
     clock = Clock(_device, (_device.width // 2, _device.height))
     primary_service: Union[None, PrimaryService] = None
+    secondary_service: Union[None, SecondaryService] = None
 
     with canvas(_device) as c:
         clock.draw(c)
@@ -97,7 +99,25 @@ def draw_frame():
         ):
             primary_service = PrimaryService(_device, (0, -1), AppState.trains[0])
 
+        if (
+            len(AppState.trains) >= 2
+            and secondary_service is None
+            or len(AppState.trains) < 2
+            and secondary_service is not None
+            or secondary_service is not None
+            and secondary_service.service_guid != AppState.trains[1].guid
+        ):
+            if len(AppState.trains) < 2:
+                secondary_service = None
+            else:
+                secondary_service = SecondaryService(
+                    _device, (0, 32), AppState.trains[1], 2
+                )
+
         primary_service.draw(c)
+
+        if secondary_service is not None:
+            secondary_service.draw(c)
 
 
 if __name__ == "__main__":
