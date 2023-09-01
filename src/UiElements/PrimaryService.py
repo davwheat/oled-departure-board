@@ -6,8 +6,9 @@ from assets.CustomPixelFontSmall import SmallFont, SmallFont_Size
 from Models.Train import Train
 from AppState import AppState
 
-from typing import Union
+from Utils.CachedText import cachedBitmapText
 
+from typing import Union
 
 _cancelled_frame_counter = 0
 _cancelled_frame_counter_max = AppState.fps * 2
@@ -64,40 +65,14 @@ class PrimaryService(Drawable):
             )
 
     def __draw_ordinal(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
-        myFont = SmallFont
-
-        c.text(
-            (root_pos[0], root_pos[1]),
-            "1st",
-            font=myFont,
-            fill="white",
-        )
+        _, _, text = cachedBitmapText("1st", SmallFont)
+        c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __draw_scheduled_time(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
-        myFont = SmallFont
-
-        c.text(
-            (root_pos[0], root_pos[1]),
-            self._service.schedDepTime,
-            font=myFont,
-            fill="white",
-        )
+        _, _, text = cachedBitmapText(self._service.schedDepTime, SmallFont)
+        c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_destination_snippets(self) -> list[str]:
-        # def text_width(text: str) -> int:
-        #     return self._canvas.textlength(text, font=SmallFont)
-
-        # def text_too_wide(text: str) -> bool:
-        #     occupied_width = (
-        #         self._pos[0]
-        #         + self.ordinal_width
-        #         + self.time_width
-        #         + self.est_time_spacing
-        #         + self.__get_est_time_width()
-        #     )
-
-        #     return text_width(text) > self._device.width - occupied_width
-
         all_snippets: list[list[str]] = [
             dest.to_snippets() for dest in self._service.destination
         ]
@@ -123,8 +98,6 @@ class PrimaryService(Drawable):
     def __draw_destination(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
         global _destination_frame_counter_max, _destination_frame_counter
 
-        myFont = SmallFont
-
         snippets = self.__get_destination_snippets()
         snippet_count = len(snippets)
 
@@ -143,12 +116,8 @@ class PrimaryService(Drawable):
 
         snippet_num_to_show = _destination_frame_counter // length_per_snippet
 
-        c.text(
-            (root_pos[0], root_pos[1]),
-            snippets[snippet_num_to_show],
-            font=myFont,
-            fill="white",
-        )
+        _, _, text = cachedBitmapText(snippets[snippet_num_to_show], SmallFont)
+        c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_est_time_text(self) -> str:
         estDepTimeText: str = self._service.estDepTime
@@ -163,13 +132,8 @@ class PrimaryService(Drawable):
         return estDepTimeText
 
     def __get_est_time_width(self, c: ImageDraw.ImageDraw) -> float:
-        myFont = SmallFont
-
         # width of est dep time
-        estDepTextWidth = c.textlength(
-            self.__get_est_time_text(),
-            font=myFont,
-        )
+        estDepTextWidth, _, _ = cachedBitmapText(self.__get_est_time_text(), SmallFont)
 
         return estDepTextWidth
 
@@ -177,8 +141,6 @@ class PrimaryService(Drawable):
         self.__increment_cancelled_frame_counter()
 
         pos = self._pos
-
-        myFont = SmallFont
 
         estDepTimeText: str = self.__get_est_time_text()
         estDepTextX = self._device.width - self.__get_est_time_width(c)
@@ -204,12 +166,8 @@ class PrimaryService(Drawable):
             )
 
         # "On time"
-        c.text(
-            (estDepTextX, pos[1]),
-            estDepTimeText,
-            font=myFont,
-            fill=color,
-        )
+        _, _, text = cachedBitmapText(estDepTimeText, SmallFont)
+        c.bitmap((estDepTextX, pos[1]), text, fill=color)
 
     def __draw_details(self, c: ImageDraw.ImageDraw):
         global _calling_at_frame_guid, _calling_at_frame_counter
@@ -221,8 +179,8 @@ class PrimaryService(Drawable):
         text = service.callingPointsText()
         desc_text = "Calling at: "
 
-        stops_width = c.textlength(text, font=SmallFont)
-        desc_width = c.textlength(desc_text, font=SmallFont)
+        stops_width, _, stops_text = cachedBitmapText(text, SmallFont)
+        desc_width, _, desc_text = cachedBitmapText(desc_text, SmallFont)
 
         # Reset scroller if service has changed
         if _calling_at_frame_guid != service.guid:
@@ -240,11 +198,8 @@ class PrimaryService(Drawable):
 
         scroller_x_pos = device.width - (_calling_at_frame_counter)
 
-        c.text(
-            (scroller_x_pos, pos[1] + SmallFont_Size + 3),
-            text,
-            font=SmallFont,
-            fill="white",
+        c.bitmap(
+            (scroller_x_pos, pos[1] + SmallFont_Size + 3), stops_text, fill="white"
         )
 
         c.rectangle(
@@ -257,12 +212,7 @@ class PrimaryService(Drawable):
             fill="black",
         )
 
-        c.text(
-            (pos[0], pos[1] + SmallFont_Size + 3),
-            desc_text,
-            font=SmallFont,
-            fill="white",
-        )
+        c.bitmap((pos[0], pos[1] + SmallFont_Size + 3), desc_text, fill="white")
 
     def draw(self, c: ImageDraw.ImageDraw):
         self.__draw_ordinal(c, (self._pos[0], self._pos[1]))
