@@ -16,6 +16,7 @@
 
 - Raspberry Pi 4
 - [SD1322 256x64 SPI OLED display](https://www.buydisplay.com/yellow-3-2-inch-arduino-raspberry-pi-oled-display-module-256x64-spi)
+  - 4 pin SPI, with Raspberry Pi dupont cable
 
 ## Testing the display
 
@@ -118,4 +119,3 @@ python src/main.py GTW
 This repository is licensed under the MIT license, but I do appreciate some form of attribution if you reuse this elsewhere.
 
 The CustomPixelFont and CustomPixelFontSmall in `src/assets` were created by me using free (for now?) software called [PixelForge](https://www.pixel-forge.com/) ([download permalink](https://archive.org/details/pixel-forge-0.9b-windows-20221104)) developed by [Sergi Lázaro](https://www.sergilazaro.com/).
-
