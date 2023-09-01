@@ -4,6 +4,17 @@ from timed_count import timed_count
 
 from AppState import AppState
 
+import argparse
+
+
+def init_argparse() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Display a live departure board for a given station.",
+    )
+    parser.add_argument("crs_code", metavar="CRS", type=str, nargs=1, help="CRS code")
+    return parser
+
+
 # Reset working directory to file's location
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -37,15 +48,15 @@ _device: Union[ssd1322, None] = None
 _data_refresh_rate = 60
 
 
-def periodic():
+def periodic(crs: str):
     for _ in timed_count(_data_refresh_rate):
-        update_data()
+        update_data(crs)
 
 
-def update_data():
+def update_data(crs: str):
     debug("Updating data...")
 
-    services = fetchServicesFromStation("WVF")
+    services = fetchServicesFromStation(crs)
 
     AppState.trains = services
 
@@ -55,7 +66,10 @@ def update_data():
 def main():
     global _nextframe, _frameperiod, _now, _device
 
-    thread = Thread(target=periodic)
+    parser = init_argparse()
+    args = parser.parse_args()
+
+    thread = Thread(target=periodic, args=(args.crs_code[0],))
     thread.start()
 
     serial = spi(device=0, port=0)

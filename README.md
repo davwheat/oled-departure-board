@@ -69,10 +69,12 @@ On Ubuntu, you can run the following commands in a terminal to install the requi
 ```
 # Python and Luma prerequisites
 sudo apt install install python3 python3-pip python3-pil libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libtiff5
-# Install the Luma library
-sudo -H pip install --upgrade luma.oled
+
 # Enable non-root access to the SPI port for your current user
 sudo usermod -a -G spi,gpio,i2c $(whoami)
+
+# Install the Luma library and other dependencies
+pip install -r requirements.txt
 ```
 
 ### Connecting the display
@@ -107,9 +109,9 @@ This may be different depending on your display, but this works correctly with m
 Run the script!
 
 ```
-python src/main.py
+# Replace GTW with any CRS codes
+python src/main.py GTW
 ```
-
 
 ## License
 
