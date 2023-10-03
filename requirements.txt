@@ -14,4 +14,4 @@ smbus2==0.4.3
 spidev==3.6
 stoppy==1.0.5
 timed-count==1.1.1
-urllib3==2.0.4
+urllib3==2.0.6
