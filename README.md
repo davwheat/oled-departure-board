@@ -133,6 +133,8 @@ systemctl --user enable departure-board.service
 systemctl --user start departure-board.service
 ```
 
+Starting the service can take up to 5 minutes depending on your device and internet connection. This is because the service creates a virtual environment and installs the dependencies.
+
 If something goes wrong, you can watch the service logs:
 
 ```bash
