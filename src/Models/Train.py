@@ -120,9 +120,11 @@ class Train:
     def callingPointsText(self) -> str:
         """Returns the calling points as a string."""
 
-        if len(self.callingPoints) == 1:
-            return str(self.callingPoints[0]) + " only."
+        points = [x for x in self.callingPoints if self.isCancelled or not x.isCancelled]
+
+        if len(points) == 1:
+            return str(points[0]) + " only."
 
         return (
-            pluralise([str(callingPoint) for callingPoint in self.callingPoints]) + "."
+            pluralise([str(p) for p in points]) + "."
         )
