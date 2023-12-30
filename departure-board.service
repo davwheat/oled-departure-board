@@ -1,13 +1,12 @@
 [Unit]
 Description=Departure Board
-After=network.target
+After=network-online.target
 
 [Service]
 Environment="STATION_CRS=GTW"
-
 WorkingDirectory=%h/oled-departure-board
 ExecStart=%h/oled-departure-board/start.sh
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
