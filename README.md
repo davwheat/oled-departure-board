@@ -154,6 +154,15 @@ systemctl --user daemon-reload
 systemctl --user restart departure-board.service
 ```
 
+### Pulling updates
+
+Rather simple:
+
+```bash
+git pull
+systemctl --user restart departure-board.service
+```
+
 ## License
 
 This repository is licensed under the MIT license, but I do appreciate some form of attribution if you reuse this elsewhere.
