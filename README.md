@@ -114,6 +114,38 @@ Run the script!
 python src/main.py GTW
 ```
 
+## Running as a service
+
+Running the departure board as a service allows it to be started automatically when your system boots up.
+
+You can configure the station CRS in the `departure-board.service` station:
+
+```ini
+# for Gatwick Airport (GTW)
+Environment="STATION_CRS=GTW"
+```
+
+Run the following commands to set up the service:
+
+```bash
+cp departure-board.service ~/.config/systemd/user/
+systemctl --user enable departure-board.service
+systemctl --user start departure-board.service
+```
+
+If something goes wrong, you can watch the service logs:
+
+```bash
+journalctl --user -fu departure-board.service
+```
+
+You can modify the service file at `~/.config/systemd/user/departure-board.service`. If you modify the service file you need to reload the systemd daemon:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user restart departure-board.service
+```
+
 ## License
 
 This repository is licensed under the MIT license, but I do appreciate some form of attribution if you reuse this elsewhere.
