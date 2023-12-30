@@ -177,7 +177,7 @@ class PrimaryService(Drawable):
         device = self._device
 
         text = service.callingPointsText()
-        desc_text = "Calling at: " if not service.isCancelled else "Was calling at: "
+        desc_text = "Calling at: "
 
         stops_width, _, stops_text = cachedBitmapText(text, SmallFont)
         desc_width, _, desc_text = cachedBitmapText(desc_text, SmallFont)
