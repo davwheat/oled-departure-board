@@ -19,5 +19,5 @@ class CallingPoint:
             eta = self.scheduledTime
 
         return (
-            f"{self.locationName}{f' ({eta})' if not self.__isServiceCancelled else ''}"
+            f"{self.locationName}{f' ({eta})' if not self.__isServiceCancelled or self.isCancelled else ''}"
         )
