@@ -136,6 +136,7 @@ Run the following commands to set up the service:
 cp departure-board.service ~/.config/systemd/user/
 systemctl --user enable departure-board.service
 systemctl --user start departure-board.service
+loginctl enable-linger $USER
 ```
 
 Starting the service can take up to 5 minutes depending on your device and internet connection. This is because the service creates a virtual environment and installs the dependencies.
