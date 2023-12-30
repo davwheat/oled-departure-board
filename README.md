@@ -36,7 +36,12 @@ sudo make check
 sudo make install
 ```
 
-These commands will build, test, and install the BCM2835 C library onto your Raspberry Pi.
+These commands will build, test, and install the BCM2835 C library onto your Raspberry Pi. If you encounter any issues, you might need to install some additional dependencies:
+
+```bash
+sudo apt install autoconf build-essential
+autoreconf -f -i
+```
 
 ### Test the OLED
 
@@ -69,7 +74,7 @@ On Ubuntu, you can run the following commands in a terminal to install the requi
 
 ```
 # Python and Luma prerequisites
-sudo apt install install python3 python3-pip python3-pil libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libtiff5
+sudo apt install python3 python3-pip python3-pil python3-venv python-is-python3 libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libtiff5
 
 # Enable non-root access to the SPI port for your current user
 sudo usermod -a -G spi,gpio,i2c $(whoami)
