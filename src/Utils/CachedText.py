@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-bitmapRenderCache = {}
+bitmapRenderCache: dict[str, dict] = {}
 
 
 def cachedBitmapText(text: str, font) -> tuple[int, int, Image.Image]:

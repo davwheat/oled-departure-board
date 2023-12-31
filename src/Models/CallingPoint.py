@@ -1,6 +1,5 @@
 from Utils.Date import iso_local_timestamp_to_datetime
 
-from typing import Union
 
 from datetime import datetime
 
@@ -59,8 +58,10 @@ class CallingPoint:
             return self.actualArrTime
         elif self.estArrTime is not None:
             return self.estArrTime
-        else:
+        elif self.schedArrTime is not None:
             return self.schedArrTime
+        else:
+            return datetime.fromtimestamp(0)
 
     def __most_accurate_dep_time(self) -> datetime:
         """
@@ -73,8 +74,10 @@ class CallingPoint:
             return self.actualDepTime
         elif self.estDepTime is not None:
             return self.estDepTime
-        else:
+        elif self.schedDepTime is not None:
             return self.schedDepTime
+        else:
+            return datetime.fromtimestamp(0)
 
     def __str__(self) -> str:
         eta_text = self.most_accurate_arr_time.strftime("%H:%M")

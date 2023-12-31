@@ -32,8 +32,8 @@ class PrimaryService(SecondaryService):
         text = service.callingPointsText()
         desc_text = "Calling at: "
 
-        stops_width, _, stops_text = cachedBitmapText(text, SmallFont)
-        desc_width, _, desc_text = cachedBitmapText(desc_text, SmallFont)
+        stops_width, _, stops_bitmap = cachedBitmapText(text, SmallFont)
+        desc_width, _, desc_bitmap = cachedBitmapText(desc_text, SmallFont)
 
         # Reset scroller if service has changed
         if _calling_at_frame_rid != service.rid:
@@ -52,7 +52,7 @@ class PrimaryService(SecondaryService):
         scroller_x_pos = device.width - (_calling_at_frame_counter)
 
         c.bitmap(
-            (scroller_x_pos, pos[1] + SmallFont_Size + 3), stops_text, fill="white"
+            (scroller_x_pos, pos[1] + SmallFont_Size + 3), stops_bitmap, fill="white"
         )
 
         c.rectangle(
@@ -65,7 +65,7 @@ class PrimaryService(SecondaryService):
             fill="black",
         )
 
-        c.bitmap((pos[0], pos[1] + SmallFont_Size + 3), desc_text, fill="white")
+        c.bitmap((pos[0], pos[1] + SmallFont_Size + 3), desc_bitmap, fill="white")
 
     def draw(self, c: ImageDraw.ImageDraw):
         super().draw(c)

@@ -121,7 +121,7 @@ class Train:
 
         if self.actualDepTime is not None:
             return self.actualDepTime.strftime("%H:%M")
-        if self.estDepTime is not None:
+        if self.estDepTime is not None and self.schedDepTime is not None:
             edt = self.estDepTime.strftime("%H:%M")
             sdt = self.schedDepTime.strftime("%H:%M")
 
@@ -143,8 +143,10 @@ class Train:
             return self.actualArrTime
         elif self.estArrTime is not None:
             return self.estArrTime
-        else:
+        elif self.schedArrTime is not None:
             return self.schedArrTime
+        else:
+            return datetime.fromtimestamp(0)
 
     def __most_accurate_dep_time(self) -> datetime:
         """
@@ -157,5 +159,7 @@ class Train:
             return self.actualDepTime
         elif self.estDepTime is not None:
             return self.estDepTime
-        else:
+        elif self.schedDepTime is not None:
             return self.schedDepTime
+        else:
+            return datetime.fromtimestamp(0)

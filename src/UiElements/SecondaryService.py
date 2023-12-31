@@ -154,7 +154,7 @@ class SecondaryService(Drawable):
             fill="black",
         )
 
-        color = "white"
+        color: str | tuple[int, int, int] = "white"
 
         if self._service.isCancelled:
             color = (
