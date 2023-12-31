@@ -64,7 +64,7 @@ class Train:
         self.delayReason: str | None = json["delayReason"]
         self.cancelReason: str | None = json["cancelReason"]
 
-        self.rid: str = f"currentCrs_{json['rid']}"
+        self.rid: str = f"{currentCrs}_{json['rid']}"
 
         self.callingPoints = list(
             filter(
