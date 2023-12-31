@@ -11,7 +11,7 @@ from Utils.CachedText import cachedBitmapText
 from Utils.String import getOrdinal
 
 _cancelled_frame_counter = 0
-_cancelled_frame_counter_max = AppState.fps * 2
+_cancelled_frame_counter_max = AppState.fps * 3
 _cancelled_frame_counter_iterated = False
 
 
@@ -157,11 +157,8 @@ class SecondaryService(Drawable):
         color: str | tuple[int, int, int] = "white"
 
         if self._service.isCancelled:
-            color = (
-                self.__get_cancelled_text_opacity(),
-                self.__get_cancelled_text_opacity(),
-                self.__get_cancelled_text_opacity(),
-            )
+            op = self.__get_cancelled_text_opacity()
+            color = (op, op, op)
 
         # "On time"
         _, _, text = cachedBitmapText(estDepTimeText, SmallFont)
