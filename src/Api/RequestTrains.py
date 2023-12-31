@@ -6,7 +6,7 @@ import requests
 from typing import Union
 
 __DEBUG_FILE: Union[None, str] = None
-# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.3.json"
+# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.json"
 
 
 def __generateUrl(stationCrs: str, servicesCount: int = 8) -> str:
