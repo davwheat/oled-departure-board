@@ -82,4 +82,4 @@ class CallingPoint:
     def __str__(self) -> str:
         eta_text = self.most_accurate_arr_time.strftime("%H:%M")
 
-        return f"{self.locationName}{f' ({eta_text})' if not self.__isServiceCancelled or self.isCancelled else ''}"
+        return f"{self.locationName}{f' ({eta_text})' if not self.__isServiceCancelled or not self.isCancelled else ''}"

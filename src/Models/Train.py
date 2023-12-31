@@ -66,16 +66,11 @@ class Train:
 
         self.rid: str = f"{currentCrs}_{json['rid']}"
 
-        self.callingPoints = list(
-            filter(
-                lambda x: not x.isCancelled,
-                [
-                    CallingPoint(x, self.isCancelled)
-                    for x in json["subsequentLocations"]
-                    if not x["isPass"] and not x["isOperational"]
-                ],
-            )
-        )
+        self.callingPoints = [
+            CallingPoint(x, self.isCancelled)
+            for x in json["subsequentLocations"]
+            if not x["isPass"] and not x["isOperational"]
+        ]
 
         self.most_accurate_arr_time: datetime = self.__most_accurate_arr_time()
         self.most_accurate_dep_time: datetime = self.__most_accurate_dep_time()
