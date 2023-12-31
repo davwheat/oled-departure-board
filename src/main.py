@@ -77,6 +77,7 @@ def main():
     except Exception as ex:
         traceback.print_exception(ex)
 
+
 def draw_loop():
     global _nextframe, _frameperiod, _now, _device
 
