@@ -1,3 +1,4 @@
+autom4te.cache/*
 .deps/
 config.h
 stamp-h1
@@ -10,3 +11,4 @@ test.*
 
 *.log
 *.status
+*~
