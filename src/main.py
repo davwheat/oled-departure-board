@@ -1,6 +1,7 @@
 import os
 from threading import Thread
 from timed_count import timed_count
+import traceback
 
 from AppState import AppState
 
@@ -64,13 +65,20 @@ def update_data(crs: str):
 
 
 def main():
-    global _nextframe, _frameperiod, _now, _device
-
     parser = init_argparse()
     args = parser.parse_args()
 
     thread = Thread(target=periodic, args=(args.crs_code[0],))
+    thread.daemon = True
     thread.start()
+
+    try:
+        draw_loop()
+    except Exception as ex:
+        traceback.print_exception(ex)
+
+def draw_loop():
+    global _nextframe, _frameperiod, _now, _device
 
     serial = spi(device=0, port=0)
 
