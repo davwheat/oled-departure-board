@@ -4,10 +4,8 @@ from Utils.Log import debug, error
 import requests
 import operator
 
-from typing import Union
-
-__DEBUG_FILE: Union[None, str] = None
-# __DEBUG_FILE: Union[None, str] = "./Api/exampleQuery.json"
+__DEBUG_FILE: str | None = None
+# __DEBUG_FILE: str | None = "./Api/exampleQuery.json"
 
 
 def __generateUrl(stationCrs: str, servicesCount: int = 8) -> str:
