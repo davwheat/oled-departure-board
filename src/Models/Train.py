@@ -18,33 +18,33 @@ class Train:
             Location(destination) for destination in json["destination"]
         ]
 
-        self.schedDepTime: Union[datetime, None] = (
+        self.schedDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["std"])
             if json["stdSpecified"]
             else None
         )
-        self.actualDepTime: Union[str, None] = (
+        self.actualDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["atd"])
             if json["atdSpecified"]
             else None
         )
-        self.estDepTime: Union[str, None] = (
+        self.estDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["etd"])
             if json["etdSpecified"]
             else None
         )
 
-        self.schedArrTime: Union[str, None] = (
+        self.schedArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["sta"])
             if json["staSpecified"]
             else None
         )
-        self.actualArrTime: Union[str, None] = (
+        self.actualArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["ata"])
             if json["ataSpecified"]
             else None
         )
-        self.estArrTime: Union[str, None] = (
+        self.estArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["eta"])
             if json["etaSpecified"]
             else None
@@ -59,10 +59,10 @@ class Train:
         self.operator: str = json["operator"]
         self.operatorCode: str = json["operatorCode"]
 
-        self.length: Union[int, None] = json["length"]
+        self.length: int | None = json["length"]
 
-        self.delayReason: Union[str, None] = json["delayReason"]
-        self.cancelReason: Union[str, None] = json["cancelReason"]
+        self.delayReason: str | None = json["delayReason"]
+        self.cancelReason: str | None = json["cancelReason"]
 
         self.rid: str = f"currentCrs_{json['rid']}"
 

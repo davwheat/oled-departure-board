@@ -11,33 +11,33 @@ class CallingPoint:
         self.crs: str = json["crs"]
         self.isCancelled: bool = json["isCancelled"]
 
-        self.schedDepTime: Union[datetime, None] = (
+        self.schedDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["std"])
             if json["stdSpecified"]
             else None
         )
-        self.actualDepTime: Union[str, None] = (
+        self.actualDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["atd"])
             if json["atdSpecified"]
             else None
         )
-        self.estDepTime: Union[str, None] = (
+        self.estDepTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["etd"])
             if json["etdSpecified"]
             else None
         )
 
-        self.schedArrTime: Union[str, None] = (
+        self.schedArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["sta"])
             if json["staSpecified"]
             else None
         )
-        self.actualArrTime: Union[str, None] = (
+        self.actualArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["ata"])
             if json["ataSpecified"]
             else None
         )
-        self.estArrTime: Union[str, None] = (
+        self.estArrTime: datetime | None = (
             iso_local_timestamp_to_datetime(json["eta"])
             if json["etaSpecified"]
             else None

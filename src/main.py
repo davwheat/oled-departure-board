@@ -43,7 +43,7 @@ from typing import Union
 _frameperiod: float = 1.0 / AppState.fps
 _now: float = time()
 _nextframe: float = _now + _frameperiod
-_device: Union[ssd1322, None] = None
+_device: ssd1322 | None = None
 
 _data_refresh_rate = 60
 
