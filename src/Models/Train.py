@@ -2,6 +2,7 @@ from Models.Location import Location
 from Models.CallingPoint import CallingPoint
 
 from Utils.String import pluralise
+from Utils.Date import iso_local_timestamp_to_datetime
 
 from typing import Union
 
@@ -9,21 +10,47 @@ import re
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-arrived_trains: dict[str, float] = {}
-
 
 class Train:
-    def __init__(self, json: dict):
+    def __init__(self, currentCrs: str, json: dict):
         self.origin: list[Location] = [Location(origin) for origin in json["origin"]]
         self.destination: list[Location] = [
             Location(destination) for destination in json["destination"]
         ]
 
-        self.schedDepTime: str = json["std"]
-        self.estDepTime: str = json["etd"]
+        self.schedDepTime: Union[datetime, None] = (
+            iso_local_timestamp_to_datetime(json["std"])
+            if json["stdSpecified"]
+            else None
+        )
+        self.actualDepTime: Union[str, None] = (
+            iso_local_timestamp_to_datetime(json["atd"])
+            if json["atdSpecified"]
+            else None
+        )
+        self.estDepTime: Union[str, None] = (
+            iso_local_timestamp_to_datetime(json["etd"])
+            if json["etdSpecified"]
+            else None
+        )
 
-        self.schedArrTime: Union[str, None] = json["sta"]
-        self.estArrTime: Union[str, None] = json["eta"]
+        self.schedArrTime: Union[str, None] = (
+            iso_local_timestamp_to_datetime(json["sta"])
+            if json["staSpecified"]
+            else None
+        )
+        self.actualArrTime: Union[str, None] = (
+            iso_local_timestamp_to_datetime(json["ata"])
+            if json["ataSpecified"]
+            else None
+        )
+        self.estArrTime: Union[str, None] = (
+            iso_local_timestamp_to_datetime(json["eta"])
+            if json["etaSpecified"]
+            else None
+        )
+
+        self.isPassengerService: bool = json["isPassengerService"]
 
         self.isCancelled: bool = json["isCancelled"]
 
@@ -37,37 +64,31 @@ class Train:
         self.delayReason: Union[str, None] = json["delayReason"]
         self.cancelReason: Union[str, None] = json["cancelReason"]
 
-        self.guid: str = json["serviceIdGuid"]
+        self.rid: str = f"currentCrs_{json['rid']}"
 
         self.callingPoints = list(
             filter(
                 lambda x: not x.isCancelled,
                 [
                     CallingPoint(x, self.isCancelled)
-                    for x in json["subsequentCallingPoints"][0]["callingPoint"]
+                    for x in json["subsequentLocations"]
+                    if not x["isPass"] and not x["isOperational"]
                 ],
             )
         )
 
-    def is_arriving(self) -> bool:
-        """Returns whether the train is arriving at the station."""
+        self.most_accurate_arr_time: datetime = self.__most_accurate_arr_time()
+        self.most_accurate_dep_time: datetime = self.__most_accurate_dep_time()
 
-        global arrived_trains
+    def has_arrived(self) -> bool:
+        """Returns whether the train has arrived at the station."""
 
-        # Remove trains that have been marked as arrived for more than 1hr
-        arrived_trains = {
-            guid: timestamp
-            for guid, timestamp in arrived_trains.items()
-            if timestamp > datetime.now().timestamp()
-        }
+        return self.actualArrTime is not None
 
-        eta_mins = self.estimatedDepartingInMinutes()
+    def has_departed(self) -> bool:
+        """Returns whether the train gas departed the station."""
 
-        if eta_mins is not None and eta_mins < 1:
-            # set to arrived, remove after 1hr
-            arrived_trains[self.guid] = datetime.now().timestamp() + 3600.0
-
-        return self.guid in arrived_trains
+        return self.actualDepTime is not None
 
     def destinationText(self) -> list[str]:
         return [str(destination) for destination in self.destination]
@@ -75,56 +96,66 @@ class Train:
     def originText(self) -> list[str]:
         return [str(origin) for origin in self.origin]
 
-    def estimatedDepartingInMinutes(self) -> Union[float, None]:
-        """Returns the estimated time in minutes until the train departs."""
-
-        sched_dep_time = self.schedDepTime
-        est_dept_time = self.estDepTime
-
-        if self.isCancelled or est_dept_time == "On time":
-            est_dept_time = sched_dep_time
-        elif est_dept_time == "Delayed":
-            return None
-
-        # If not matches HH:mm
-        if not re.match(r"^\d{2}:\d{2}$", est_dept_time):
-            return None
-
-        est_hour, est_min = est_dept_time.split(":")
-
-        now = datetime.now(ZoneInfo("Europe/London"))
-        est_time = datetime(
-            now.year,
-            now.month,
-            now.day,
-            int(est_hour),
-            int(est_min),
-            tzinfo=ZoneInfo("Europe/London"),
-        )
-
-        # Handle midnight and day rollover
-        if now.hour < 12:
-            # If before midday
-            if est_time.hour > 18:
-                est_time += timedelta(days=-1)
-        else:
-            # If after midday
-            if est_time.hour < 9:
-                est_time += timedelta(days=1)
-
-        # Get time diff in minutes
-        time_diff = (est_time - now).total_seconds() / 60
-
-        return time_diff
-
     def callingPointsText(self) -> str:
         """Returns the calling points as a string."""
 
-        points = [x for x in self.callingPoints if self.isCancelled or not x.isCancelled]
+        points = [
+            x for x in self.callingPoints if self.isCancelled or not x.isCancelled
+        ]
 
         if len(points) == 1:
             return str(points[0]) + " only."
 
-        return (
-            pluralise([str(p) for p in points]) + "."
-        )
+        return pluralise([str(p) for p in points]) + "."
+
+    def scheduled_departure_text(self) -> str:
+        """Returns the scheduled departure time as a string."""
+
+        if self.schedDepTime is None:
+            return "XX:XX"
+
+        return self.schedDepTime.strftime("%H:%M")
+
+    def estimated_departure_text(self) -> str:
+        """Returns the estimated departure time as a string."""
+
+        if self.actualDepTime is not None:
+            return self.actualDepTime.strftime("%H:%M")
+        if self.estDepTime is not None:
+            edt = self.estDepTime.strftime("%H:%M")
+            sdt = self.schedDepTime.strftime("%H:%M")
+
+            if edt != sdt:
+                return f"Expt {edt}"
+
+            return "On time"
+        else:
+            return "Delayed"
+
+    def __most_accurate_arr_time(self) -> datetime:
+        """
+        Returns the most accurate arrival time.
+
+        This is the actual arrival time if it exists, otherwise the estimated arrival time, otherwise the scheduled arrival time.
+        """
+
+        if self.actualArrTime is not None:
+            return self.actualArrTime
+        elif self.estArrTime is not None:
+            return self.estArrTime
+        else:
+            return self.schedArrTime
+
+    def __most_accurate_dep_time(self) -> datetime:
+        """
+        Returns the most accurate departure time.
+
+        This is the actual departure time if it exists, otherwise the estimated departure time, otherwise the scheduled departure time.
+        """
+
+        if self.actualDepTime is not None:
+            return self.actualDepTime
+        elif self.estDepTime is not None:
+            return self.estDepTime
+        else:
+            return self.schedDepTime

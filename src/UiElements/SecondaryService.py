@@ -33,8 +33,9 @@ class SecondaryService(Drawable):
         self, device: ssd1322, pos: tuple[int, int], service: Train, ordinal: int
     ):
         super().__init__(device, pos)
+
         self._service: Train = service
-        self.service_guid = service.guid
+        self.service_rid = service.rid
         self.ordinal = ordinal
 
     def __del__(self):
@@ -68,7 +69,9 @@ class SecondaryService(Drawable):
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __draw_scheduled_time(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
-        _, _, text = cachedBitmapText(self._service.schedDepTime, SmallFont)
+        _, _, text = cachedBitmapText(
+            self._service.scheduled_departure_text(), SmallFont
+        )
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_destination_snippets(self) -> list[str]:
@@ -119,16 +122,12 @@ class SecondaryService(Drawable):
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_est_time_text(self) -> str:
-        estDepTimeText: str = self._service.estDepTime
-
         if self._service.isCancelled:
-            estDepTimeText = "Cancelled"
-        elif self._service.is_arriving():
-            estDepTimeText = f"Arrived"
-        elif estDepTimeText not in ["On time", "Delayed"]:
-            estDepTimeText = f"Expt {estDepTimeText}"
+            return "Cancelled"
+        elif self._service.has_arrived() or self._service.has_departed():
+            return "Arrived"
 
-        return estDepTimeText
+        return self._service.estimated_departure_text()
 
     def __get_est_time_width(self, c: ImageDraw.ImageDraw) -> float:
         # width of est dep time

@@ -2,6 +2,7 @@ from Models.Train import Train
 from Utils.Log import debug, error
 
 import requests
+import operator
 
 from typing import Union
 
@@ -11,7 +12,7 @@ __DEBUG_FILE: Union[None, str] = None
 
 def __generateUrl(stationCrs: str, servicesCount: int = 8) -> str:
     """Generates a URL to a Huxley 2 compatible API endpoint."""
-    return f"https://national-rail-api.davwheat.dev/departures/{stationCrs}/{servicesCount}?expand=true"
+    return f"https://national-rail-api.davwheat.dev/staffdepartures/{stationCrs}/{servicesCount}?expand=true"
 
 
 def fetchServicesFromStation(stationCrs: str) -> list[Train]:
@@ -44,18 +45,12 @@ def fetchServicesFromStation(stationCrs: str) -> list[Train]:
         return []
 
     # Parse JSON into a list of trains
-    trains: list[Train] = []
+    trains: list[Train] = [Train(stationCrs, x) for x in data["trainServices"]]
 
-    for service in data["trainServices"]:
-        train = Train(service)
+    # Filter out trains that have departed
+    trains = [x for x in trains if x.actualDepTime is None]
 
-        # Get time diff in minutes
-        time_diff = train.estimatedDepartingInMinutes()
-
-        # Ignore trains that have already departed
-        if time_diff is not None and time_diff < -1:
-            continue
-
-        trains.append(train)
+    # Sort by real departure time value
+    trains.sort(key=operator.attrgetter("most_accurate_dep_time"))
 
     return trains

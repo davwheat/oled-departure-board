@@ -109,9 +109,9 @@ def draw_frame():
 
         if (
             primary_service is None
-            or primary_service.service_guid != AppState.trains[0].guid
+            or primary_service.service_rid != AppState.trains[0].rid
         ):
-            primary_service = PrimaryService(_device, (0, -1), AppState.trains[0])
+            primary_service = PrimaryService(_device, (0, -1), AppState.trains[0], 1)
 
         if (
             len(AppState.trains) >= 2
@@ -119,7 +119,7 @@ def draw_frame():
             or len(AppState.trains) < 2
             and secondary_service is not None
             or secondary_service is not None
-            and secondary_service.service_guid != AppState.trains[1].guid
+            and secondary_service.service_rid != AppState.trains[1].rid
         ):
             if len(AppState.trains) < 2:
                 secondary_service = None
