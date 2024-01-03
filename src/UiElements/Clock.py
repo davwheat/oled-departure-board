@@ -15,9 +15,9 @@ class Clock(Drawable):
         # Get time HH:mm:ss
         time = datetime.now(ZoneInfo("Europe/London"))
 
-        hour = time.strftime("%H")
-        min = time.strftime("%M")
-        secs = time.strftime("%S")
+        hour = "%02d" % time.hour
+        min = "%02d" % time.minute
+        secs = "%02d" % time.second
 
         widthPerChar = 10
         colonWidth = 5

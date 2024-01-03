@@ -109,16 +109,16 @@ class Train:
         if self.schedDepTime is None:
             return "XX:XX"
 
-        return self.schedDepTime.strftime("%H:%M")
+        return "%02d:%02d" % (self.schedDepTime.hour, self.schedDepTime.minute)
 
     def estimated_departure_text(self) -> str:
         """Returns the estimated departure time as a string."""
 
         if self.actualDepTime is not None:
-            return self.actualDepTime.strftime("%H:%M")
+            return "%02d:%02d" % (self.actualDepTime.hour, self.actualDepTime.minute)
         if self.estDepTime is not None and self.schedDepTime is not None:
-            edt = self.estDepTime.strftime("%H:%M")
-            sdt = self.schedDepTime.strftime("%H:%M")
+            edt = "%02d:%02d" % (self.estDepTime.hour, self.estDepTime.minute)
+            sdt = "%02d:%02d" % (self.schedDepTime.hour, self.schedDepTime.minute)
 
             if edt != sdt:
                 return f"Expt {edt}"

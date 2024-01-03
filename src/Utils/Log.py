@@ -3,6 +3,11 @@ from datetime import datetime
 _debug = True
 
 
+def __get_time() -> str:
+    now = datetime.now()
+    return "%02d:%02d:%02d" % (now.hour, now.minute, now.second)
+
+
 # Pass all args to print function
 def debug(*args):
     """Log a debug message to the console if debug mode is enabled
@@ -10,7 +15,7 @@ def debug(*args):
     All arguments are passed as-is to the print function.
     """
     if _debug:
-        time = datetime.now().strftime("%H:%M:%S")
+        time = __get_time()
         print(f"[DEBUG]   [{time}]", *args)
 
 
@@ -19,7 +24,7 @@ def error(*args):
 
     All arguments are passed as-is to the print function.
     """
-    time = datetime.now().strftime("%H:%M:%S")
+    time = __get_time()
     print(f"[ERROR]   [{time}]", *args)
 
 
@@ -28,5 +33,5 @@ def critical(*args):
 
     All arguments are passed as-is to the print function.
     """
-    time = datetime.now().strftime("%H:%M:%S")
+    time = __get_time()
     print(f"[CRITICAL] [{time}]", *args)
