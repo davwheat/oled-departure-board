@@ -39,7 +39,7 @@ from UiElements.NoServices import NoServices
 
 from AppState import AppState
 from Api.RequestTrains import fetchServicesFromStation
-from Utils.Log import debug, error
+from Utils.Log import debug
 
 from typing import Union
 
@@ -86,7 +86,7 @@ def draw_loop():
 
     hour_last_cleared_text_cache = int(time()) // 3600
 
-    serial = spi(device=0, port=0, bus_speed_hz=10_000_000)
+    serial = spi(device=0, port=0, bus_speed_hz=16_000_000)
 
     _device = ssd1322(serial)
 
