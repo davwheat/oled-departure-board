@@ -49,7 +49,7 @@ _now: float = time()
 _nextframe: float = _now + _frameperiod
 _device: ssd1322 | None = None
 
-_data_refresh_rate = 60
+_data_refresh_rate = 20
 
 
 def periodic(crs: str):
