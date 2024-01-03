@@ -1,7 +1,8 @@
 import json
+import os
 
 __location_name_overrides: dict[str, str] = json.load(
-    open("src/Data/location_name_overrides.json", "r")
+    open(os.path.join(os.path.dirname(__file__), "./location_name_overrides.json"), "r")
 )
 
 
