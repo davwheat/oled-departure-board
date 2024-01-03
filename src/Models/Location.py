@@ -1,10 +1,14 @@
 from typing import Union
 
+from Data.Data import get_location_name_with_override
+
 
 class Location:
     def __init__(self, json: dict):
-        self.locationName: str = json["locationName"]
         self.crs: str = json["crs"]
+        self.locationName: str = get_location_name_with_override(
+            self.crs, json["locationName"]
+        )
         self.via: Union[str, None] = json["via"]
 
     def __str__(self) -> str:

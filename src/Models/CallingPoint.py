@@ -1,3 +1,4 @@
+from Data.Data import get_location_name_with_override
 from Utils.Date import iso_local_timestamp_to_datetime
 
 
@@ -6,8 +7,10 @@ from datetime import datetime
 
 class CallingPoint:
     def __init__(self, json: dict, isServiceCancelled: bool):
-        self.locationName: str = json["locationName"]
         self.crs: str = json["crs"]
+        self.locationName: str = get_location_name_with_override(
+            self.crs, json["locationName"]
+        )
         self.isCancelled: bool = json["isCancelled"]
 
         self.schedDepTime: datetime | None = (
