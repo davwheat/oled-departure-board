@@ -29,7 +29,7 @@ class PrimaryService(SecondaryService):
         desc_text = "Calling at: "
 
         stops_width, _, stops_bitmap = cachedBitmapText(text, SmallFont)
-        desc_width, _, desc_bitmap = cachedBitmapText(desc_text, SmallFont)
+        desc_width, desc_height, desc_bitmap = cachedBitmapText(desc_text, SmallFont)
 
         # Reset scroller if service has changed
         if _calling_at_frame_rid != service.rid:
@@ -56,7 +56,7 @@ class PrimaryService(SecondaryService):
                 pos[0],
                 pos[1] + SmallFont_Size + 3,
                 pos[0] + self.ordinal_width + self.time_width - 1,
-                pos[1] + (SmallFont_Size + 3) * 2,
+                pos[1] + (SmallFont_Size + 3) + desc_height,
             ),
             fill="black",
         )
