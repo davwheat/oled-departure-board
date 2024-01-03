@@ -6,6 +6,7 @@ import traceback
 from AppState import AppState
 
 import argparse
+from Drawable import Drawable
 
 from Utils.CachedText import clearBitmapCache
 
@@ -89,6 +90,10 @@ def draw_loop():
 
     _device = ssd1322(serial)
 
+    clock = Clock(_device, (_device.width // 2, _device.height))
+
+    drawables: list[Drawable] = [clock]
+
     frame = 0
 
     while True:
@@ -110,25 +115,19 @@ def draw_loop():
 
         _nextframe += _frameperiod
 
-        draw_frame()
+        draw_frame(_device, drawables)
 
 
-def draw_frame():
-    global _device
-
-    if _device is None:
-        error("Device not initialized")
-        exit(1)
-
-    clock = Clock(_device, (_device.width // 2, _device.height))
+def draw_frame(device: ssd1322, persistent_drawables: list[Drawable]):
     primary_service: Union[None, PrimaryService] = None
     secondary_service: Union[None, SecondaryService] = None
 
-    with canvas(_device) as c:
-        clock.draw(c)
+    with canvas(device) as c:
+        for d in persistent_drawables:
+            d.draw(c)
 
         if AppState.trains is None or len(AppState.trains) == 0:
-            no_services = NoServices(_device, (0, 0))
+            no_services = NoServices(device, (0, 0))
             no_services.draw(c)
             return
 
@@ -136,7 +135,7 @@ def draw_frame():
             primary_service is None
             or primary_service.service_rid != AppState.trains[0].rid
         ):
-            primary_service = PrimaryService(_device, (0, -1), AppState.trains[0], 1)
+            primary_service = PrimaryService(device, (0, -1), AppState.trains[0], 1)
 
         if (
             len(AppState.trains) >= 2
@@ -150,7 +149,7 @@ def draw_frame():
                 secondary_service = None
             else:
                 secondary_service = SecondaryService(
-                    _device, (0, 32), AppState.trains[1], 2
+                    device, (0, 32), AppState.trains[1], 2
                 )
 
         primary_service.draw(c)
