@@ -8,6 +8,7 @@ from AppState import AppState
 
 import argparse
 from Drawable import Drawable
+from UiElements.DottedSeparator import DottedSeparator
 
 from Utils.CachedText import clearBitmapCache
 
@@ -21,6 +22,11 @@ def init_argparse() -> argparse.ArgumentParser:
         "--emulate",
         action="store_true",
         help="Use emulated display window",
+    )
+    parser.add_argument(
+        "--show-separator",
+        action="store_true",
+        help="Show dotted separator between 1st and 2nd+ services",
     )
     return parser
 
@@ -81,17 +87,17 @@ def main():
     thread.start()
 
     try:
-        draw_loop(bool(args.emulate))
+        draw_loop(bool(args.emulate), bool(args.show_separator))
     except Exception as ex:
         traceback.print_exception(ex)
 
 
-def draw_loop(isEmulated: bool):
+def draw_loop(is_emulated: bool, show_separator: bool):
     global _nextframe, _frameperiod, _now, _device
 
     hour_last_cleared_text_cache = int(time()) // 3600
 
-    if isEmulated:
+    if is_emulated:
         from luma.emulator.device import pygame
 
         _device = pygame(width=256, height=64, mode="1", transform="identity", scale=2)
@@ -102,10 +108,16 @@ def draw_loop(isEmulated: bool):
     clock = Clock(_device, (_device.width // 2, _device.height))
 
     drawables: list[Drawable] = [clock]
+    service_persistent_drawables: list[Drawable] = []
     services: list[SecondaryService] = [
         PrimaryService(_device, (0, -1), 1),
-        SecondaryService(_device, (0, 32), 2),
+        SecondaryService(_device, (0, 34 if show_separator else 32), 2),
     ]
+
+    if show_separator:
+        service_persistent_drawables.append(
+            DottedSeparator(_device, (0, 32), _device.width)
+        )
 
     frame = 0
 
@@ -128,12 +140,13 @@ def draw_loop(isEmulated: bool):
 
         _nextframe += _frameperiod
 
-        draw_frame(_device, drawables, services)
+        draw_frame(_device, drawables, service_persistent_drawables, services)
 
 
 def draw_frame(
     device: device,
     persistent_drawables: list[Drawable],
+    service_persistent_drawables: list[Drawable],
     services: list[SecondaryService],
 ):
     with canvas(device) as c:
@@ -146,6 +159,9 @@ def draw_frame(
             no_services = NoServices(device, (0, 0))
             no_services.draw(c)
             return
+
+        for d in service_persistent_drawables:
+            d.draw(c)
 
         for i, s in enumerate(services):
             if service_count >= i + 1:
