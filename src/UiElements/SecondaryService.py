@@ -158,10 +158,14 @@ class SecondaryService(Drawable):
         _, _, text = cachedBitmapText(estDepTimeText, SmallFont)
         c.bitmap((estDepTextX, pos[1]), text, fill=color)
 
-    def draw(self, c: ImageDraw.ImageDraw):
-        self.__draw_ordinal(c, (self._pos[0], self._pos[1]))
-        self.__draw_scheduled_time(c, (self._pos[0] + self.ordinal_width, self._pos[1]))
+    def draw(self, c: ImageDraw.ImageDraw, position_offset: tuple[int, int] = (0, 0)):
+        x, y = position_offset
+        self.__draw_ordinal(c, (self._pos[0] + x, self._pos[1] + y))
+        self.__draw_scheduled_time(
+            c, (self._pos[0] + self.ordinal_width + x, self._pos[1] + y)
+        )
         self.__draw_destination(
-            c, (self._pos[0] + self.ordinal_width + self.time_width, self._pos[1])
+            c,
+            (self._pos[0] + self.ordinal_width + self.time_width + x, self._pos[1] + y),
         )
         self.__draw_est_time(c)

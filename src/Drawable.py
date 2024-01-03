@@ -7,5 +7,8 @@ class Drawable:
         self._device: device = dev
         self._pos: tuple[int, int] = pos
 
+    def set_pos(self, pos: tuple[int, int]):
+        self._pos = pos
+
     def draw(self, canvas: ImageDraw.ImageDraw):
         pass

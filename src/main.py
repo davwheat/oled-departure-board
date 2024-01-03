@@ -9,6 +9,7 @@ from AppState import AppState
 import argparse
 from Drawable import Drawable
 from UiElements.DottedSeparator import DottedSeparator
+from UiElements.SwapServicesContainer import SwapServicesContainer
 
 from Utils.CachedText import clearBitmapCache
 
@@ -107,12 +108,19 @@ def draw_loop(is_emulated: bool, show_separator: bool):
 
     clock = Clock(_device, (_device.width // 2, _device.height))
 
+    primary = PrimaryService(_device, (0, -1), 1)
+
     drawables: list[Drawable] = [clock]
-    service_persistent_drawables: list[Drawable] = []
     services: list[SecondaryService] = [
-        PrimaryService(_device, (0, -1), 1),
+        primary,
         SecondaryService(_device, (0, 34 if show_separator else 32), 2),
+        SecondaryService(_device, (0, 34 if show_separator else 32), 3),
     ]
+
+    swapper = SwapServicesContainer(
+        _device, (0, 34 if show_separator else 32), services[1:]
+    )
+    service_persistent_drawables: list[Drawable] = [swapper, primary]
 
     if show_separator:
         service_persistent_drawables.append(
@@ -150,25 +158,23 @@ def draw_frame(
     services: list[SecondaryService],
 ):
     with canvas(device) as c:
-        for d in persistent_drawables:
-            d.draw(c)
-
         service_count = 0 if AppState.trains is None else len(AppState.trains)
 
         if AppState.trains is None or service_count == 0:
             no_services = NoServices(device, (0, 0))
             no_services.draw(c)
-            return
+        else:
+            for i, s in enumerate(services):
+                if service_count >= i + 1:
+                    s.set_service(AppState.trains[i])
+                else:
+                    break
 
-        for d in service_persistent_drawables:
+            for d in service_persistent_drawables:
+                d.draw(c)
+
+        for d in persistent_drawables:
             d.draw(c)
-
-        for i, s in enumerate(services):
-            if service_count >= i + 1:
-                s.set_service(AppState.trains[i])
-                s.draw(c)
-            else:
-                break
 
 
 if __name__ == "__main__":
