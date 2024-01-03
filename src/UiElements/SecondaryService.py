@@ -97,8 +97,8 @@ class SecondaryService(Drawable):
         snippets = self.__get_destination_snippets()
         snippet_count = len(snippets)
 
-        # 5 secs per snippet
-        length_per_snippet = AppState.fps * 5
+        # 3 secs per snippet
+        length_per_snippet = AppState.fps * 3
 
         expected_dest_frame_counter_max = snippet_count * length_per_snippet
 
