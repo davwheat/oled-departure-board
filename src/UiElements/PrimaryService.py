@@ -65,6 +65,6 @@ class PrimaryService(SecondaryService):
 
         c.bitmap((pos[0], pos[1] + SmallFont_Size + 3), desc_bitmap, fill="white")
 
-    def draw(self, c: ImageDraw.ImageDraw):
-        super().draw(c)
+    def draw(self, c: ImageDraw.ImageDraw, position_offset: tuple[int, int] = (0, 0)):
+        super().draw(c, position_offset)
         self.__draw_details(c)
