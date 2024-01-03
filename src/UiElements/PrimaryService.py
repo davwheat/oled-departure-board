@@ -1,10 +1,9 @@
 from .SecondaryService import SecondaryService
 from PIL import ImageDraw
-from luma.oled.device import ssd1322
+from luma.core.device import device
 
 from assets.CustomPixelFontSmall import SmallFont, SmallFont_Size
 
-from Models.Train import Train
 from AppState import AppState
 
 from Utils.CachedText import cachedBitmapText
@@ -16,8 +15,8 @@ _calling_at_frame_counter = 0
 
 
 class PrimaryService(SecondaryService):
-    def __init__(self, device: ssd1322, pos: tuple[int, int], ordinal: int):
-        super().__init__(device, pos, ordinal)
+    def __init__(self, dev: device, pos: tuple[int, int], ordinal: int):
+        super().__init__(dev, pos, ordinal)
 
     def __draw_details(self, c: ImageDraw.ImageDraw):
         global _calling_at_frame_rid, _calling_at_frame_counter

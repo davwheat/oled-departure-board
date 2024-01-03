@@ -1,10 +1,10 @@
 from PIL import ImageDraw
-from luma.oled.device import ssd1322
+from luma.core.device import device
 
 
 class Drawable:
-    def __init__(self, device: ssd1322, pos: tuple[int, int]):
-        self._device: ssd1322 = device
+    def __init__(self, dev: device, pos: tuple[int, int]):
+        self._device: device = dev
         self._pos: tuple[int, int] = pos
 
     def draw(self, canvas: ImageDraw.ImageDraw):

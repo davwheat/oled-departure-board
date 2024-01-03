@@ -1,5 +1,6 @@
 import os
 from threading import Thread
+from typing import cast
 from timed_count import timed_count
 import traceback
 
@@ -16,6 +17,11 @@ def init_argparse() -> argparse.ArgumentParser:
         description="Display a live departure board for a given station.",
     )
     parser.add_argument("crs_code", metavar="CRS", type=str, nargs=1, help="CRS code")
+    parser.add_argument(
+        "--emulate",
+        action="store_true",
+        help="Use emulated display window",
+    )
     return parser
 
 
@@ -31,6 +37,7 @@ from time import time, sleep
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.oled.device import ssd1322
+from luma.core.device import device
 
 from UiElements.Clock import Clock
 from UiElements.PrimaryService import PrimaryService
@@ -41,13 +48,11 @@ from AppState import AppState
 from Api.RequestTrains import fetchServicesFromStation
 from Utils.Log import debug
 
-from typing import Union
-
 
 _frameperiod: float = 1.0 / AppState.fps
 _now: float = time()
 _nextframe: float = _now + _frameperiod
-_device: ssd1322 | None = None
+_device: device | None = None
 
 _data_refresh_rate = 20
 
@@ -76,19 +81,23 @@ def main():
     thread.start()
 
     try:
-        draw_loop()
+        draw_loop(bool(args.emulated))
     except Exception as ex:
         traceback.print_exception(ex)
 
 
-def draw_loop():
+def draw_loop(isEmulated: bool):
     global _nextframe, _frameperiod, _now, _device
 
     hour_last_cleared_text_cache = int(time()) // 3600
 
-    serial = spi(device=0, port=0, bus_speed_hz=16_000_000)
+    if isEmulated:
+        from luma.emulator.device import pygame
 
-    _device = ssd1322(serial)
+        _device = pygame(width=256, height=64, mode="1", transform="identity", scale=2)
+    else:
+        serial = spi(device=0, port=0, bus_speed_hz=16_000_000)
+        _device = ssd1322(serial)
 
     clock = Clock(_device, (_device.width // 2, _device.height))
 
@@ -123,7 +132,7 @@ def draw_loop():
 
 
 def draw_frame(
-    device: ssd1322,
+    device: device,
     persistent_drawables: list[Drawable],
     services: list[SecondaryService],
 ):

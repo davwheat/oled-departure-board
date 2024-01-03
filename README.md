@@ -12,6 +12,19 @@
   - [Launch time!](#launch-time)
 - [License](#license)
 
+## Testing without extra hardware
+
+You can test the departure board using an emulator driven by pygame without the need for any additional hardware.
+
+```bash
+sudo apt install python3 python3-pip python3-pil python3-venv python-is-python3 libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libtiff5
+python -m venv venv
+pip install -r requirements.dev
+python src/main.py --emulate GTW
+```
+
+<img height="128" src="./docs/img/emulator.png">
+
 ## Equipment
 
 - Raspberry Pi 4
@@ -79,7 +92,8 @@ sudo apt install python3 python3-pip python3-pil python3-venv python-is-python3 
 # Enable non-root access to the SPI port for your current user
 sudo usermod -a -G spi,gpio,i2c $(whoami)
 
-# Install the Luma library and other dependencies
+# Install dependencies
+python -m venv venv
 pip install -r requirements.txt
 ```
 

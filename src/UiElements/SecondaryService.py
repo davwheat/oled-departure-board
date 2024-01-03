@@ -1,6 +1,6 @@
 from Drawable import Drawable
 from PIL import ImageDraw
-from luma.oled.device import ssd1322
+from luma.core.device import device
 
 from assets.CustomPixelFontSmall import SmallFont
 
@@ -30,8 +30,8 @@ class SecondaryService(Drawable):
 
     est_time_spacing = 4
 
-    def __init__(self, device: ssd1322, pos: tuple[int, int], ordinal: int):
-        super().__init__(device, pos)
+    def __init__(self, dev: device, pos: tuple[int, int], ordinal: int):
+        super().__init__(dev, pos)
         self.ordinal = ordinal
 
     def set_service(self, service: Train):
