@@ -9,7 +9,7 @@ from AppState import AppState
 
 
 class SwapServicesContainer(Drawable):
-    _frames_per_service = AppState.fps * 4
+    _frames_per_service = AppState.fps * 12
     _service_height = SmallFont_Size + 3
     _frame_counter = 0
     _slide_animation_frames = SmallFont_Size
