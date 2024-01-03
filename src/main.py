@@ -93,6 +93,10 @@ def draw_loop():
     clock = Clock(_device, (_device.width // 2, _device.height))
 
     drawables: list[Drawable] = [clock]
+    services: list[SecondaryService] = [
+        PrimaryService(_device, (0, -1), 1),
+        SecondaryService(_device, (0, 32), 2),
+    ]
 
     frame = 0
 
@@ -115,10 +119,14 @@ def draw_loop():
 
         _nextframe += _frameperiod
 
-        draw_frame(_device, drawables)
+        draw_frame(_device, drawables, services)
 
 
-def draw_frame(device: ssd1322, persistent_drawables: list[Drawable]):
+def draw_frame(
+    device: ssd1322,
+    persistent_drawables: list[Drawable],
+    services: list[SecondaryService],
+):
     primary_service: Union[None, PrimaryService] = None
     secondary_service: Union[None, SecondaryService] = None
 
@@ -126,36 +134,19 @@ def draw_frame(device: ssd1322, persistent_drawables: list[Drawable]):
         for d in persistent_drawables:
             d.draw(c)
 
-        if AppState.trains is None or len(AppState.trains) == 0:
+        service_count = len(AppState.trains)
+
+        if AppState.trains is None or service_count == 0:
             no_services = NoServices(device, (0, 0))
             no_services.draw(c)
             return
 
-        if (
-            primary_service is None
-            or primary_service.service_rid != AppState.trains[0].rid
-        ):
-            primary_service = PrimaryService(device, (0, -1), AppState.trains[0], 1)
-
-        if (
-            len(AppState.trains) >= 2
-            and secondary_service is None
-            or len(AppState.trains) < 2
-            and secondary_service is not None
-            or secondary_service is not None
-            and secondary_service.service_rid != AppState.trains[1].rid
-        ):
-            if len(AppState.trains) < 2:
-                secondary_service = None
+        for i, s in enumerate(services):
+            if service_count >= i + 1:
+                s.set_service(AppState.trains[i])
+                s.draw(c)
             else:
-                secondary_service = SecondaryService(
-                    device, (0, 32), AppState.trains[1], 2
-                )
-
-        primary_service.draw(c)
-
-        if secondary_service is not None:
-            secondary_service.draw(c)
+                break
 
 
 if __name__ == "__main__":

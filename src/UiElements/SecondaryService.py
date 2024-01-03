@@ -10,16 +10,17 @@ from AppState import AppState
 from Utils.CachedText import cachedBitmapText
 from Utils.String import getOrdinal
 
+import itertools
+
 _cancelled_frame_counter = 0
 _cancelled_frame_counter_max = AppState.fps * 3
 _cancelled_frame_counter_iterated = False
 
 
-_destination_frame_counter = 0
-_destination_frame_counter_max = 0
-
-
 class SecondaryService(Drawable):
+    _destination_frame_counter = 0
+    _destination_frame_counter_max = 0
+
     ordinal_width = 26
 
     # nums are 7 px wide,
@@ -29,14 +30,13 @@ class SecondaryService(Drawable):
 
     est_time_spacing = 4
 
-    def __init__(
-        self, device: ssd1322, pos: tuple[int, int], service: Train, ordinal: int
-    ):
+    def __init__(self, device: ssd1322, pos: tuple[int, int], ordinal: int):
         super().__init__(device, pos)
+        self.ordinal = ordinal
 
+    def set_service(self, service: Train):
         self._service: Train = service
         self.service_rid = service.rid
-        self.ordinal = ordinal
 
     def __del__(self):
         global _cancelled_frame_counter_iterated
@@ -89,17 +89,11 @@ class SecondaryService(Drawable):
             elif snippet_group_count > 1:
                 snippet_group[0] = "and " + snippet_group[0]
 
-        flattened_snippets: list[str] = []
-
-        for snippet_group in all_snippets:
-            for snippet in snippet_group:
-                flattened_snippets.append(snippet)
+        flattened_snippets: list[str] = [*itertools.chain.from_iterable(all_snippets)]
 
         return flattened_snippets
 
     def __draw_destination(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
-        global _destination_frame_counter_max, _destination_frame_counter
-
         snippets = self.__get_destination_snippets()
         snippet_count = len(snippets)
 
@@ -108,15 +102,15 @@ class SecondaryService(Drawable):
 
         expected_dest_frame_counter_max = snippet_count * length_per_snippet
 
-        if _destination_frame_counter_max != expected_dest_frame_counter_max:
-            _destination_frame_counter = 0
-            _destination_frame_counter_max = expected_dest_frame_counter_max
+        if self._destination_frame_counter_max != expected_dest_frame_counter_max:
+            self._destination_frame_counter = 0
+            self._destination_frame_counter_max = expected_dest_frame_counter_max
         else:
-            _destination_frame_counter += 1
-            if _destination_frame_counter >= _destination_frame_counter_max:
-                _destination_frame_counter = 0
+            self._destination_frame_counter += 1
+            if self._destination_frame_counter >= self._destination_frame_counter_max:
+                self._destination_frame_counter = 0
 
-        snippet_num_to_show = _destination_frame_counter // length_per_snippet
+        snippet_num_to_show = self._destination_frame_counter // length_per_snippet
 
         _, _, text = cachedBitmapText(snippets[snippet_num_to_show], SmallFont)
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")

@@ -16,10 +16,8 @@ _calling_at_frame_counter = 0
 
 
 class PrimaryService(SecondaryService):
-    def __init__(
-        self, device: ssd1322, pos: tuple[int, int], service: Train, ordinal: int
-    ):
-        super().__init__(device, pos, service, ordinal)
+    def __init__(self, device: ssd1322, pos: tuple[int, int], ordinal: int):
+        super().__init__(device, pos, ordinal)
 
     def __draw_details(self, c: ImageDraw.ImageDraw):
         global _calling_at_frame_rid, _calling_at_frame_counter
