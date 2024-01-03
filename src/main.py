@@ -84,7 +84,7 @@ def main():
 def draw_loop():
     global _nextframe, _frameperiod, _now, _device
 
-    hour_last_cleared_text_cache = int(time()) / 3600
+    hour_last_cleared_text_cache = int(time()) // 3600
 
     serial = spi(device=0, port=0, bus_speed_hz=10_000_000)
 
@@ -102,7 +102,7 @@ def draw_loop():
         frame = (frame + 1) % AppState.fps
 
         if frame == 0:
-            now_hour = int(time()) / 3600
+            now_hour = int(time()) // 3600
 
             if now_hour > hour_last_cleared_text_cache:
                 hour_last_cleared_text_cache = now_hour
