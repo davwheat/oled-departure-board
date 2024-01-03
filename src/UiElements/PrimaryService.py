@@ -13,7 +13,6 @@ from typing import Union
 
 _calling_at_frame_rid: Union[None, str] = None
 _calling_at_frame_counter = 0
-_calling_at_frame_counter_max = 0
 
 
 class PrimaryService(SecondaryService):

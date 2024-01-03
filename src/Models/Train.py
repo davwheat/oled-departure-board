@@ -4,11 +4,7 @@ from Models.CallingPoint import CallingPoint
 from Utils.String import pluralise
 from Utils.Date import iso_local_timestamp_to_datetime
 
-from typing import Union
-
-import re
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from datetime import datetime
 
 
 class Train:
