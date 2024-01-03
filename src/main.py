@@ -97,7 +97,7 @@ def draw_loop(isEmulated: bool):
         _device = pygame(width=256, height=64, mode="1", transform="identity", scale=2)
     else:
         serial = spi(device=0, port=0, bus_speed_hz=16_000_000)
-        _device = ssd1322(serial)
+        _device = ssd1322(serial, framebuffer="diff_to_previous")
 
     clock = Clock(_device, (_device.width // 2, _device.height))
 
