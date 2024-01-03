@@ -127,14 +127,11 @@ def draw_frame(
     persistent_drawables: list[Drawable],
     services: list[SecondaryService],
 ):
-    primary_service: Union[None, PrimaryService] = None
-    secondary_service: Union[None, SecondaryService] = None
-
     with canvas(device) as c:
         for d in persistent_drawables:
             d.draw(c)
 
-        service_count = len(AppState.trains)
+        service_count = 0 if AppState.trains is None else len(AppState.trains)
 
         if AppState.trains is None or service_count == 0:
             no_services = NoServices(device, (0, 0))
