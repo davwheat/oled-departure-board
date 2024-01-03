@@ -7,13 +7,11 @@ from datetime import datetime
 from assets.CustomPixelFontClock import ClockFont
 from Utils.CachedText import cachedBitmapText
 
-_, _, __colon = cachedBitmapText(":", ClockFont)
-
 
 class Clock(Drawable):
-    def draw(self, c: ImageDraw.ImageDraw):
-        global __colon
+    _, _, __colon = cachedBitmapText(":", ClockFont)
 
+    def draw(self, c: ImageDraw.ImageDraw):
         pos = self._pos
 
         # Get time HH:mm:ss
@@ -53,7 +51,9 @@ class Clock(Drawable):
         )
 
         # Colons
-        c.bitmap((pos_x_start + widthPerChar * 2, pos_y), __colon, fill="white")
+        c.bitmap((pos_x_start + widthPerChar * 2, pos_y), self.__colon, fill="white")
         c.bitmap(
-            (pos_x_start + widthPerChar * 4 + colonWidth, pos_y), __colon, fill="white"
+            (pos_x_start + widthPerChar * 4 + colonWidth, pos_y),
+            self.__colon,
+            fill="white",
         )
