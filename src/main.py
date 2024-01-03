@@ -29,6 +29,13 @@ def init_argparse() -> argparse.ArgumentParser:
         action="store_true",
         help="Show dotted separator between 1st and 2nd+ services",
     )
+    parser.add_argument(
+        "--services",
+        type=int,
+        help="Number of services to display (2-9)",
+        choices=range(2, 10),
+        default=3,
+    )
     return parser
 
 
@@ -88,12 +95,12 @@ def main():
     thread.start()
 
     try:
-        draw_loop(bool(args.emulate), bool(args.show_separator))
+        draw_loop(bool(args.emulate), bool(args.show_separator), int(args.services))
     except Exception as ex:
         traceback.print_exception(ex)
 
 
-def draw_loop(is_emulated: bool, show_separator: bool):
+def draw_loop(is_emulated: bool, show_separator: bool, services_count: int):
     global _nextframe, _frameperiod, _now, _device
 
     hour_last_cleared_text_cache = int(time()) // 3600
@@ -113,8 +120,10 @@ def draw_loop(is_emulated: bool, show_separator: bool):
     drawables: list[Drawable] = [clock]
     services: list[SecondaryService] = [
         primary,
-        SecondaryService(_device, (0, 34 if show_separator else 32), 2),
-        SecondaryService(_device, (0, 34 if show_separator else 32), 3),
+        *(
+            SecondaryService(_device, (0, 34 if show_separator else 32), i + 1)
+            for i in range(1, services_count)
+        ),
     ]
 
     swapper = SwapServicesContainer(

@@ -28,17 +28,16 @@ class SwapServicesContainer(Drawable):
         self._service_drawables = service_drawables
 
     def draw(self, c: ImageDraw.ImageDraw):
-        count = len(self._service_drawables)
+        draws = list(filter(lambda d: d.has_service(), self._service_drawables))
+        count = len(draws)
 
         counter_max = count * self._frames_per_service
         if self._frame_counter >= counter_max:
             self._frame_counter = 0
 
         visible_index = self._frame_counter // self._frames_per_service
-        currently_visible = self._service_drawables[visible_index]
-        next_visible = self._service_drawables[
-            0 if visible_index + 1 >= count else visible_index + 1
-        ]
+        currently_visible = draws[visible_index]
+        next_visible = draws[0 if visible_index + 1 >= count else visible_index + 1]
 
         progress = self._frame_counter % self._frames_per_service
         slide_up_progress = (

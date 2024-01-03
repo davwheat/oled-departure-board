@@ -20,6 +20,7 @@ _cancelled_frame_counter_iterated = False
 class SecondaryService(Drawable):
     _destination_frame_counter = 0
     _destination_frame_counter_max = 0
+    _service: Train | None = None
 
     ordinal_width = 26
 
@@ -34,8 +35,11 @@ class SecondaryService(Drawable):
         super().__init__(dev, pos)
         self.ordinal = ordinal
 
+    def has_service(self) -> bool:
+        return self._service is not None
+
     def set_service(self, service: Train):
-        self._service: Train = service
+        self._service = service
         self.service_rid = service.rid
 
     def __del__(self):
@@ -69,12 +73,14 @@ class SecondaryService(Drawable):
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __draw_scheduled_time(self, c: ImageDraw.ImageDraw, root_pos: tuple[int, int]):
+        assert self._service is not None
         _, _, text = cachedBitmapText(
             self._service.scheduled_departure_text(), SmallFont
         )
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_destination_snippets(self) -> list[str]:
+        assert self._service is not None
         all_snippets: list[list[str]] = [
             dest.to_snippets() for dest in self._service.destination
         ]
@@ -116,6 +122,7 @@ class SecondaryService(Drawable):
         c.bitmap((root_pos[0], root_pos[1]), text, fill="white")
 
     def __get_est_time_text(self) -> str:
+        assert self._service is not None
         if self._service.isCancelled:
             return "Cancelled"
         elif self._service.has_arrived() or self._service.has_departed():
@@ -130,6 +137,7 @@ class SecondaryService(Drawable):
         return estDepTextWidth
 
     def __draw_est_time(self, c: ImageDraw.ImageDraw):
+        assert self._service is not None
         self.__increment_cancelled_frame_counter()
 
         pos = self._pos
