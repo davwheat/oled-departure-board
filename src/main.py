@@ -81,7 +81,7 @@ def main():
     thread.start()
 
     try:
-        draw_loop(bool(args.emulated))
+        draw_loop(bool(args.emulate))
     except Exception as ex:
         traceback.print_exception(ex)
 
