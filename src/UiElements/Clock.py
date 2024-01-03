@@ -23,12 +23,12 @@ class Clock(Drawable):
         colonWidth = 5
 
         _, height, h1 = cachedBitmapText(hour[0], ClockFont)
-        _, height, h2 = cachedBitmapText(hour[1], ClockFont)
-        _, height, m1 = cachedBitmapText(min[0], ClockFont)
-        _, height, m2 = cachedBitmapText(min[1], ClockFont)
-        _, height, s1 = cachedBitmapText(secs[0], ClockFont)
-        _, height, s2 = cachedBitmapText(secs[1], ClockFont)
-        _, height, colon = cachedBitmapText(":", ClockFont)
+        _, _, h2 = cachedBitmapText(hour[1], ClockFont)
+        _, _, m1 = cachedBitmapText(min[0], ClockFont)
+        _, _, m2 = cachedBitmapText(min[1], ClockFont)
+        _, _, s1 = cachedBitmapText(secs[0], ClockFont)
+        _, _, s2 = cachedBitmapText(secs[1], ClockFont)
+        _, _, colon = cachedBitmapText(":", ClockFont)
 
         pos_x_start: int = pos[0] - ((6 * widthPerChar + 2 * colonWidth) // 2)
         pos_y: int = pos[1] - height
