@@ -91,6 +91,9 @@ class Train:
     def originText(self) -> list[str]:
         return [str(origin) for origin in self.origin]
 
+    __callingPointsHash: int | None = None
+    __callingPointsLast: str | None = None
+
     def callingPointsText(self) -> str:
         """Returns the calling points as a string."""
 
@@ -98,10 +101,24 @@ class Train:
             x for x in self.callingPoints if self.isCancelled or not x.isCancelled
         ]
 
-        if len(points) == 1:
-            return str(points[0]) + " only."
+        points_hash = hash(tuple(points))
 
-        return pluralise([str(p) for p in points]) + "."
+        if (
+            self.__callingPointsHash == points_hash
+            and self.__callingPointsLast is not None
+        ):
+            return self.__callingPointsLast
+
+        text = (
+            str(points[0]) + " only."
+            if len(points) == 1
+            else pluralise([str(p) for p in points]) + "."
+        )
+
+        self.__callingPointsHash = points_hash
+        self.__callingPointsLast = text
+
+        return text
 
     def scheduled_departure_text(self) -> str:
         """Returns the scheduled departure time as a string."""

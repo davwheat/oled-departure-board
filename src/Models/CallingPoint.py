@@ -86,3 +86,15 @@ class CallingPoint:
         )
 
         return f"{self.locationName}{f' ({eta_text})' if not self.__isServiceCancelled or not self.isCancelled else ''}"
+
+    def __hash__(self):
+        return hash(
+            (
+                self.crs,
+                self.schedDepTime,
+                self.schedArrTime,
+                self.estArrTime,
+                self.estDepTime,
+                self.isCancelled,
+            )
+        )
