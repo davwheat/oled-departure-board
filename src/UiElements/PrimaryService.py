@@ -21,6 +21,8 @@ class PrimaryService(SecondaryService):
     def __draw_details(self, c: ImageDraw.ImageDraw):
         global _calling_at_frame_rid, _calling_at_frame_counter
 
+        assert self._service is not None
+
         pos = self._pos
         service = self._service
         device = self._device
