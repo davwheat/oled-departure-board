@@ -3,7 +3,11 @@ Description=Departure Board
 After=network-online.target
 
 [Service]
+# CRS code of station to list departures for
 Environment="STATION_CRS=GTW"
+# Number of services to list on the screen (range: 2-9 inclusive)
+Environment="NUM_SERVICES=5"
+
 WorkingDirectory=%h/oled-departure-board
 ExecStart=%h/oled-departure-board/start.sh
 Restart=on-failure
