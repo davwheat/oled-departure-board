@@ -110,13 +110,14 @@ void er_oled_clear()
 void er_oled_char(uint8_t x, uint8_t y, char acsii, uint8_t invert)
 {
   uint8_t i, str;
-  uint16_t OffSet;
+  uint16_t ascii_offset, ascii_array_offset;
   x = x / 4;
-  OffSet = (acsii - 32) * 16;
+  ascii_offset = (acsii - 32);
+  ascii_array_offset = ascii_offset * AsciiLibCharHeight;
   er_oled_SetWindow(x, y, x + 1, y + 15);
-  for (i = 0; i < 16; i++)
+  for (i = 0; i < AsciiLibCharHeight; i++)
   {
-    str = AsciiLib[OffSet + i];
+    str = AsciiLib[ascii_array_offset + i];
     if (invert)
       str = ~str;
     er_oled_Data_processing(str);
@@ -132,7 +133,7 @@ void er_oled_string(uint8_t x, uint8_t y, char *pString, uint8_t invert)
       return;
     }
     er_oled_char(x, y, *pString, invert);
-    x += 8;
+    x += AsciiLibCharWidth;
     pString += 1;
   }
 }
