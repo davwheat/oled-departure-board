@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSD1322 bitmap generator</title>
+  </head>
+  <body>
+    <div class="inputs">
+      <label>
+        Width
+        <input type="number" id="width" value="8" disabled />
+      </label>
+      <label>
+        Height
+        <input type="number" id="height" value="16" />
+      </label>
+      <label>
+        Use 1-bit mode <input type="checkbox" id="1bit" checked />
+      </label>
+    </div>
+
+    <table id="table"></table>
+
+    <label id="export-container">
+      Export
+      <textarea id="export" rows="15"></textarea>
+    </label>
+
+    <script>
+      const table = document.getElementById("table");
+      let width = 8;
+      let height = 16;
+
+      data = [];
+
+      function updateTable() {
+        table.innerHTML = "";
+
+        // Add cells
+        for (let i = 0; i < height; i++) {
+          const row = document.createElement("tr");
+
+          if (typeof data[i] === "undefined") {
+            data[i] = [];
+          }
+
+          for (let j = 0; j < width; j++) {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.setAttribute("data-row", i);
+            input.setAttribute("data-col", j);
+            cell.appendChild(input);
+            row.appendChild(cell);
+
+            if (typeof data[i][j] === "undefined") {
+              data[i][j] = false;
+            }
+
+            if (data[i][j]) {
+              input.checked = true;
+            }
+          }
+          table.appendChild(row);
+        }
+
+        exportData();
+      }
+
+      function exportData() {
+        const out = [];
+
+        if (document.getElementById("1bit").checked) {
+          data.forEach((row, y) => {
+            const maxX = row.length - 1;
+
+            out.push(
+              row.reduce((acc, col, x) => {
+                if (col) {
+                  acc |= 1 << (maxX - x);
+                }
+
+                return acc;
+              }, 0)
+            );
+          });
+        } else {
+          data.forEach((row, x) => {
+            const maxX = row.length - 1;
+
+            row.forEach((col, y) => {
+              let val = 0xf * (col ? 1 : 0);
+              if (y % 2 === 0) val = val << 4;
+
+              if (col) {
+                console.log(x, y, val.toString(16));
+              }
+
+              const index = x * Math.ceil(width / 2) + Math.floor(y / 2);
+
+              out[index] = val | out[index];
+            });
+          });
+        }
+
+        console.log(out);
+
+        document.getElementById("export").value = out
+          .map((val) => "0x" + val.toString(16).padStart(2, "0"))
+          .join(", ");
+      }
+
+      // Toggle checkbox on cell click
+      table.addEventListener("click", (e) => {
+        if (e.target.nodeName === "TD") {
+          const input = e.target.querySelector("input");
+          input.checked = !input.checked;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+
+      table.addEventListener("change", (e) => {
+        if (e.target.nodeName === "INPUT") {
+          const input = e.target;
+          const row = parseInt(input.getAttribute("data-row"));
+          const col = parseInt(input.getAttribute("data-col"));
+
+          if (input.checked) {
+            data[row] ||= [];
+            data[row][col] = true;
+          } else {
+            data[row][col] = false;
+          }
+
+          exportData();
+        }
+      });
+
+      document.getElementById("width").addEventListener("input", (e) => {
+        const value = parseInt(e.target.value);
+
+        if (value > height) {
+          data.forEach((row) => {
+            row[value - 1] = false;
+          });
+        } else {
+          data.forEach((row, i) => {
+            data[i] = row.slice(0, value);
+          });
+        }
+
+        width = value;
+        updateTable();
+      });
+
+      document.getElementById("height").addEventListener("input", (e) => {
+        const value = parseInt(e.target.value);
+
+        if (value > width) {
+          data[value - 1] = [];
+        } else {
+          data = data.slice(0, value);
+        }
+
+        height = value;
+        updateTable();
+      });
+
+      document.getElementById("1bit").addEventListener("change", (e) => {
+        if (e.target.checked) {
+          document.getElementById("width").value = 8;
+          document.getElementById("width").disabled = true;
+        } else {
+          document.getElementById("width").disabled = false;
+        }
+
+        document.getElementById("width").dispatchEvent(new Event("input"));
+        updateTable();
+      });
+
+      updateTable();
+    </script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        font-family: sans-serif;
+      }
+
+      input[type="number"] {
+        width: 60px;
+      }
+
+      .inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      table {
+        margin-top: 16px;
+        border-collapse: collapse;
+      }
+
+      td {
+        border: 1px solid black;
+        --size: 40px;
+        width: var(--size);
+        height: var(--size);
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      tr:nth-child(14),
+      tr:nth-child(15),
+      tr:nth-child(-n + 6) {
+        background-color: #ddd;
+      }
+
+      tr:nth-child(-n + 3) {
+        background-color: #bbb;
+      }
+
+      tr:nth-child(16) {
+        background-color: #bbb;
+      }
+
+      td:has(input:checked) {
+        background-color: black;
+      }
+
+      #export-container {
+        display: block;
+        margin-top: 16px;
+      }
+
+      #export {
+        margin-top: 8px;
+        width: 100%;
+      }
+    </style>
+  </body>
+</html>
