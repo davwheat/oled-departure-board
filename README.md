@@ -42,11 +42,13 @@ The BCM2835 was used on the 1st gen Raspberry Pis but future models have maintai
 We need to install a C library in order to access the GPIO pins and other features of the Pi within our application.
 
 ```
+# Needed to allow non-root access to the SPI port
 sudo apt install libcap2 libcap-dev
 sudo adduser $USER kmem
 echo 'SUBSYSTEM=="mem", KERNEL=="mem", GROUP="kmem", MODE="0660"' | sudo tee /etc/udev/rules.d/98-mem.rules
 sudo udevadm trigger
 
+# Install the BCM2835 C library
 cd reference/bcm2835-1.73
 ./configure CFLAGS="-DBCM2835_HAVE_LIBCAP"
 make
@@ -69,7 +71,8 @@ You'll need the BCM2835 library from the last step already installed.
 
 ```
 cd reference/SPI_Interface
-make
+# `sudo` needed for running `setcap` to allow non-root access to the SPI port
+sudo make
 sudo ./oled
 ```
 
