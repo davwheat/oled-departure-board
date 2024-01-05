@@ -2,8 +2,8 @@
 Description=Departure Board boot message
 
 [Service]
-WorkingDirectory=/home/ubuntu/oled-departure-board/display/startup
-ExecStart=/home/ubuntu/oled-departure-board/display/startup/oled
+WorkingDirectory=%h/oled-departure-board/display/startup
+ExecStart=%h/oled-departure-board/display/startup/oled
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
