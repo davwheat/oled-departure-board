@@ -24,8 +24,8 @@ void oled_centred_text(char *text, uint8_t y)
 
 int main(int argc, char **argv)
 {
-  time_t now;
-  struct tm *timenow;
+  // time_t now;
+  // struct tm *timenow;
 
   printf("** Starting display **\n");
 
@@ -38,9 +38,10 @@ int main(int argc, char **argv)
   er_oled_begin();
   er_oled_clear();
 
-  oled_centred_text("Starting departure board", 0);
-  oled_centred_text("This will take a few minutes", AsciiLibCharHeight);
+  oled_centred_text("Starting departure board", 16);
+  oled_centred_text("This will take a few minutes", 32);
 
+  // // +3 due to spacing at bottom of digits
   // uint8_t clockY = SCREEN_HEIGHT - AsciiLibCharHeight + 3;
   // char timeStr[9] = "";
 
@@ -51,7 +52,6 @@ int main(int argc, char **argv)
 
   //   sprintf(timeStr, "%02d:%02d:%02d", timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
 
-  //   // +3 due to spacing at bottom of digits
   //   oled_centred_text(timeStr, clockY);
   // }
 
