@@ -41,19 +41,19 @@ int main(int argc, char **argv)
   oled_centred_text("Starting departure board", 0);
   oled_centred_text("This will take a few minutes", AsciiLibCharHeight);
 
-  uint8_t clockY = SCREEN_HEIGHT - AsciiLibCharHeight + 3;
-  char timeStr[9] = "";
+  // uint8_t clockY = SCREEN_HEIGHT - AsciiLibCharHeight + 3;
+  // char timeStr[9] = "";
 
-  while (1)
-  {
-    time(&now);
-    timenow = localtime(&now);
+  // while (1)
+  // {
+  //   time(&now);
+  //   timenow = localtime(&now);
 
-    sprintf(timeStr, "%02d:%02d:%02d", timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
+  //   sprintf(timeStr, "%02d:%02d:%02d", timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
 
-    // +3 due to spacing at bottom of digits
-    oled_centred_text(timeStr, clockY);
-  }
+  //   // +3 due to spacing at bottom of digits
+  //   oled_centred_text(timeStr, clockY);
+  // }
 
   bcm2835_spi_end();
   bcm2835_close();
