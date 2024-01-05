@@ -176,6 +176,34 @@ systemctl --user daemon-reload
 systemctl --user restart departure-board.service
 ```
 
+### Boot-up message
+
+Also included in the repository is the C source for a simple boot message to display on the Pi.
+
+Provided you have followed all prior commands in [Testing the display](#testing-the-display), you should be able to build this program with the command below:
+
+```bash
+cd display/startup
+make
+```
+
+You can then test the program by running:
+
+```bash
+sudo ./oled
+```
+
+> [!TIP]
+>
+> As the program technically can access all of the Pi's GPIO equipment, the program needs to be run as a superuser (i.e., with `sudo`). This is not the case for the Python script, which only requires the user to be a member of the `gpio` and `spi` groups.
+
+If you'd like to start this automatically during your Pi's boot process:
+
+```bash
+sudo cp startup-message.service /etc/systemd/system/
+sudo systemctl enable startup-message
+```
+
 ### Pulling updates
 
 Rather simple:
