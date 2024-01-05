@@ -118,6 +118,8 @@ def draw_loop(is_emulated: bool, show_separator: bool, services_count: int):
         serial = spi(device=0, port=0, bus_speed_hz=16_000_000)
         _device = ssd1322(serial, framebuffer="diff_to_previous")
 
+    _device.clear()
+
     clock = Clock(_device, (_device.width // 2, _device.height))
 
     primary = PrimaryService(_device, (0, -1), 1)
