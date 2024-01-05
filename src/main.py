@@ -96,8 +96,13 @@ def main():
 
     try:
         draw_loop(bool(args.emulate), bool(args.show_separator), int(args.services))
+    except KeyboardInterrupt as ex:
+        pass
     except Exception as ex:
         traceback.print_exception(ex)
+    finally:
+        global _device
+        _device.cleanup()
 
 
 def draw_loop(is_emulated: bool, show_separator: bool, services_count: int):
